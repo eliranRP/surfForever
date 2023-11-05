@@ -1,0 +1,23 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 18
+    commands:
+      - npm ci
+
+  pre_build:
+    commands:
+      - echo "Running pre-build commands..."
+      - npm install -g typescript
+
+  build:
+    commands:
+      - npm run build
+
+artifacts:
+  files:
+    - "Procfile"
+    - "dist/**/*"
+    - "node_modules/**/*"

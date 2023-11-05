@@ -1,0 +1,32 @@
+name: Deployment
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: choice
+        description: environment to deploy
+        options:
+          - development
+          - staging
+          - production
+        default: development
+
+jobs:
+  ci:
+    uses: ./.github/workflows/ci.yml
+    secrets: inherit
+
+  deployment:
+    name: ${{ inputs.environment}} deployment
+    environment:
+      name: ${{ inputs.environment}}
+    needs:
+      - ci
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - id: environment-reset-head
+        uses: ./.github/actions/environment-reset-head
+        with:
+          environment-name: ${{ inputs.environment }}
+          github-secret: ${{ secrets.GITHUB_TOKEN }}

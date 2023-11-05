@@ -1,0 +1,22 @@
+name: environment reset head
+description: Reset environment head to trigger the aws CodePipeline
+inputs:
+  environment-name:
+    required: true
+    description: "The name of the environment"
+  github-secret:
+    required: true
+    description: "github token"
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v3
+    - name: Push to selected branch
+      run: |
+        git config --global user.name 'bot'
+        git config --global user.email 'bot@moveohls.com'
+        git remote set-url origin https://x-access-token:${{ inputs.github-secret }}@github.com/$GITHUB_REPOSITORY
+        git checkout -b "${{ inputs.environment-name }}"
+        git reset --hard "$GITHUB_REF_NAME"
+        git push -f origin ${{ inputs.environment-name }}
+      shell: bash
