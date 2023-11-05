@@ -1,12 +1,11 @@
 import mongoose from "mongoose";
 
 export interface GeoPoint {
-    type: "Point";
-    coordinates: [number, number];
-  }
-  
+  type: "Point";
+  coordinates: [number, number];
+}
 
-export const pointSchema = new mongoose.Schema({
+export const pointSchema = new mongoose.Schema<GeoPoint>({
   type: {
     type: String,
     enum: ["Point"],

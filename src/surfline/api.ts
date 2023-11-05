@@ -1,11 +1,12 @@
 import { apiClient } from "../framework/api-manager";
-import { ForecastObject, HitGroup } from "./types";
+import { ForecastObject, SearchResult, SpotDetail } from "./types";
 
-export const searchForPlace = async (query: string): Promise<HitGroup[]> => {
-  const response = await apiClient.get(
+export const searchForPlace = async (
+  query: string
+): Promise<SearchResult[]> => {
+  return await apiClient.get(
     `${process.env.SURFLINE_BASE_URL}/search/site?q=${query}&querySize=10&suggestionSize=10&newsSearch=true`
   );
-  return response.data;
 };
 
 // Search for a place
@@ -548,3 +549,9 @@ export const getForecast = async (
     }
 }
  */
+
+export const spotDetails = async (spotId: string): Promise<SpotDetail> => {
+  return await apiClient.get(
+    `${process.env.SURFLINE_BASE_URL}/kbyg/spots/details?spotId=${spotId}`
+  );
+};

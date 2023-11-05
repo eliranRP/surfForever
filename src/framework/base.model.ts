@@ -23,7 +23,7 @@ abstract class BaseCrudModel<T extends Document> {
   }
 
   async findMany(filter: FilterQuery<T>): Promise<T[]> {
-    const items = await this.model.find<T>(filter);
+    const items = await this.model.find<T>(filter).exec();
     return items;
   }
 

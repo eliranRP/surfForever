@@ -1,13 +1,13 @@
 import { Schema, Document, model } from "mongoose";
-import { pointSchema } from "../schema/point.schema";
-import { GeoPoint } from "../schema/point.schema";
 import { WaveHeightType } from "./const";
+import { spotSchema } from "../location/location.schema";
+import { SpotLocation } from "../location/location.types";
 
 export interface IUserNotificationSettings {
   waveConfigurationId: WaveHeightType;
   chatId: number;
-  beachName: string;
-  location: GeoPoint;
+  spotName: string;
+  spot: SpotLocation;
   daysToForecast: number;
   preferredReminderHours: number;
 }
@@ -22,10 +22,10 @@ const UserNotificationSettingsSchema =
         type: String,
         enum: ["poor", "good", "high", "very_high"],
       },
-      location: {
-        type: pointSchema,
+      spot: {
+        type: spotSchema,
       },
-      beachName: { type: String },
+      spotName: { type: String },
       daysToForecast: { type: Number },
       preferredReminderHours: { type: Number, default: 20 },
       chatId: { type: Number },

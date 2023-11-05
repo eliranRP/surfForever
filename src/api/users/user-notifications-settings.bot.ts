@@ -1,25 +1,35 @@
 import { Message } from "node-telegram-bot-api";
 import TelegramBotManager from "../../framework/bot-manager";
-import { WaveConfiguration, WaveConfigurationType } from "./const";
+import { WaveConfiguration } from "./const";
 import UserNotificationSettingsCrudModel from "./user-notifications-settings.model";
+import { locationByName } from "../location/location.service";
+import logger from "../../framework/logger.manager";
+import {
+  ChatAction,
+  ResponseButton,
+  SurfingLocationResponseButton,
+} from "./types";
+import {
+  senLocationWithDetails,
+  senLocationWithDetailsWithoutReply,
+} from "./utils";
 
 const instance = TelegramBotManager.getInstance();
 
-interface ResponseButton {
-  type: ChatAction;
-  data: WaveConfigurationType;
-}
-
-enum ChatAction {
-  SET_WAVE_HEIGHT = "set_wave_height",
-  SET_LOCATION = "set_location",
-  SET_DAYS_TO_FORECAST = "set_days_to_forecast",
-  SET_PREFERRED_REMINDER_HOURS = "set_preferred_reminder_hours",
-}
-
 instance.onText(/\/location/, async (msg: Message) => {
   const chatId = msg.chat.id;
-  await instance.sendMessage(chatId, "Upcoming");
+  try {
+    const query = msg.text.replace(/\/location/, "").trim();
+    const locationSuggestions = await locationByName(query);
+    await Promise.all(
+      locationSuggestions.map(async (location) =>
+        senLocationWithDetails(chatId, location, instance)
+      )
+    );
+  } catch (error) {
+    await instance.sendMessage(chatId, error.message);
+    logger.error(error);
+  }
 });
 
 instance.onText(/\/wave/, async (msg: Message) => {
@@ -49,15 +59,13 @@ instance.onText(/\/wave/, async (msg: Message) => {
   );
 });
 
-instance.onText(/\/beach/, async (msg: Message) => {
+instance.onText(/\/favorite/, async (msg: Message) => {
   const chatId = msg.chat.id;
-  await instance.sendMessage(chatId, "Upcoming");
+  const settings = await UserNotificationSettingsCrudModel.findOne({ chatId });
+
+  await senLocationWithDetailsWithoutReply(chatId, settings.spot, instance);
 });
 
-instance.onText(/\/settings/, async (msg: Message) => {
-  const chatId = msg.chat.id;
-  await instance.sendMessage(chatId, "Upcoming");
-});
 
 // Handle inline keyboard button callbacks
 instance.on("callback_query", async (query) => {
@@ -67,15 +75,21 @@ instance.on("callback_query", async (query) => {
     const data = JSON.parse(query.data);
     switch (data.type) {
       case ChatAction.SET_WAVE_HEIGHT:
-        const waveKey = data.data;
-        UserNotificationSettingsCrudModel.setPreferredWavHeight(
+        const waveKey = (data as ResponseButton).data;
+        await UserNotificationSettingsCrudModel.setPreferredWavHeight(
           chatId,
           waveKey
         );
         break;
       case ChatAction.SET_DAYS_TO_FORECAST:
       case ChatAction.SET_PREFERRED_REMINDER_HOURS:
-      case ChatAction.SET_LOCATION:
+      case ChatAction.CHOOSE_SURFING_LOCATION:
+        logger.info(JSON.stringify(data as SurfingLocationResponseButton));
+        await UserNotificationSettingsCrudModel.setPreferredLocation(
+          chatId,
+          data.id
+        );
+        break;
     }
   } catch (error) {
     console.log(error);

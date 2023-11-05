@@ -1,4 +1,8 @@
 import BaseCrudModel from "../../framework/base.model";
+import logger from "../../framework/logger.manager";
+import { getForecast, spotDetails } from "../../surfline/api";
+import { locationByName } from "../location/location.service";
+import { SpotLocation } from "../location/location.types";
 import { WaveConfiguration, WaveHeightType } from "./const";
 import UserNotificationSettings, {
   IUserNotificationSettingsSchema,
@@ -20,6 +24,26 @@ class UserNotificationSettingsCrudModel extends BaseCrudModel<IUserNotificationS
       { chatId },
       { waveConfigurationId: waveHeight, chatId }
     );
+  }
+
+  private async enrichSpotDetailsById(spotId: string): Promise<SpotLocation> {
+    const spot = await spotDetails(spotId);
+    if (!spot?.spot?.name) {
+      logger.error("Invalid spot id");
+      throw new Error("Invalid spot id");
+    }
+    const enrichDetails = (await locationByName(spot.spot.name)).filter(
+      (spot) => spot.spotId === spotId
+    );
+    if (enrichDetails.length == 0)
+      throw new Error(`Location ${spot.spot.name} not found`);
+    return enrichDetails[0];
+  }
+
+  async setPreferredLocation(chatId: number, spotId: string) {
+    const spot = await this.enrichSpotDetailsById(spotId);
+    if (!spot) throw new Error("Invalid location");
+    return await this.upsert({ chatId }, { spot, chatId });
   }
 }
 
