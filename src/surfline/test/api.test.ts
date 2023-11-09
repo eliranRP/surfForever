@@ -20,6 +20,7 @@ describe("surfline api", () => {
             rating: {
               key: getRatingByKey("FAIR").key,
               value: getRatingByValue(Rating.FAIR).value,
+              display: "FAIR",
             },
           },
           {
@@ -28,6 +29,7 @@ describe("surfline api", () => {
             rating: {
               key: getRatingByKey("GOOD").key,
               value: getRatingByValue(Rating.GOOD).value,
+              display: "GOOD",
             },
           },
         ],

@@ -1,3 +1,5 @@
+import { RatingSchema } from "./user-notifications-settings.schema";
+
 export interface WaveHeightResponseButton {
   type: ChatAction;
   data: WaveTypeId;
@@ -47,17 +49,6 @@ export const Hours = [
   },
   { values: ALL_DAY, key: HoursKind.AllDay, display: "All Day", emoji: "🏖️" },
 ];
-
-export enum Rating {
-  VERY_POOR,
-  POOR,
-  POOR_TO_FAIR,
-  FAIR,
-  FAIR_TO_GOOD,
-  GOOD,
-  VERY_GOOD,
-}
-
 export enum RatingDisplayName {
   VERT_POOR = "Very Poor",
   POOR = "Poor",
@@ -66,6 +57,25 @@ export enum RatingDisplayName {
   FAIR_TO_GOOD = "Fair to Good",
   GOOD = "Good",
   VERY_GOOD = "Very Good",
+}
+
+export const RatingKind: RatingSchema[] = [
+  { key: "VERY_POOR", value: 0, display: RatingDisplayName.VERT_POOR },
+  { key: "POOR", value: 1, display: RatingDisplayName.POOR },
+  { key: "POOR_TO_FAIR", value: 2, display: RatingDisplayName.POOR_TO_FAIR },
+  { key: "FAIR", value: 3, display: RatingDisplayName.FAIR },
+  { key: "FAIR_TO_GOOD", value: 4, display: RatingDisplayName.FAIR_TO_GOOD },
+  { key: "GOOD", value: 5, display: RatingDisplayName.GOOD },
+  { key: "VERY_GOOD", value: 6, display: RatingDisplayName.VERY_GOOD },
+];
+export enum Rating {
+  VERY_POOR,
+  POOR,
+  POOR_TO_FAIR,
+  FAIR,
+  FAIR_TO_GOOD,
+  GOOD,
+  VERY_GOOD,
 }
 
 export enum WaveTypeId {

@@ -13,8 +13,9 @@ import {
   RatingResponseButton,
   Hours,
   HoursResponseButton,
+  RatingKind,
 } from "./types";
-import { chooseSpotMessage, getPreferredSpot } from "./utils";
+import { chooseSpotMessage, sendPreferredSpot } from "./utils";
 import { MESSAGES_TYPE } from "../messages/message.type";
 import { chunkArray } from "../utils/utils";
 import { checkMatchBetweenForecastAndUserSettings } from "../user-filters/user-filters";
@@ -52,17 +53,16 @@ instance.onText(/\/location/, async (msg: Message) => {
 
 instance.onText(/\/rating/, async (msg: Message) => {
   const chatId = msg.chat.id;
-  const options = [];
-  for (const ratingKey in RatingDisplayName) {
-    const keyItem = {
-      text: RatingDisplayName[ratingKey],
+
+  const options = RatingKind.map((option) => {
+    return {
+      text: option.display,
       callback_data: JSON.stringify({
         type: ChatAction.SET_RATING,
-        data: Rating[ratingKey],
+        data: option.key,
       }),
     };
-    options.push(keyItem);
-  }
+  });
 
   // Create the inline keyboard markup
   const replyMarkup: InlineKeyboardMarkup = {
@@ -167,15 +167,17 @@ instance.onText(/\/daysToForecast/, async (msg: Message) => {
 instance.onText(/\/favorite/, async (msg: Message) => {
   const chatId = msg.chat.id;
   const settings = await UserNotificationSettingsCrudModel.findOne({ chatId });
-
-  await getPreferredSpot(chatId, settings.spot, instance);
+  if (settings?.spot) {
+    await sendPreferredSpot(chatId, settings.spot, instance);
+    return;
+  }
+  await instance.sendMessage(chatId, "You should choose location, long press on /location and type with the command the name of your favorite spot");
 });
 
 // Handle inline keyboard button callbacks
 instance.on("callback_query", async (query) => {
   const chatId = query.message.chat.id;
   try {
-    const messageId = query.message.message_id;
     const data = JSON.parse(query.data);
     switch (data.type) {
       case ChatAction.SET_RATING:
@@ -209,7 +211,7 @@ instance.on("callback_query", async (query) => {
           chatId,
           data.id
         );
-
+        await instance.sendMessage(chatId, `${MESSAGES_TYPE.LOCATION_EMOJI}`);
         break;
     }
   } catch (error) {

@@ -12,6 +12,7 @@ export const UserNotificationSettingsFactory =
     rating: {
       key: "FAIR",
       value: Rating.FAIR,
+      display: "FAIR",
     },
     spot: {
       spotId: faker.datatype.uuid(),

@@ -11,6 +11,7 @@ export interface WaveHeightRange {
 export interface RatingSchema {
   key: keyof typeof Rating;
   value: Rating;
+  display: string;
 }
 
 export interface IUserNotificationSettings {
@@ -36,11 +37,11 @@ const UserNotificationSettingsSchema =
         type: spotSchema,
       },
       rating: {
-        key: { type: String, enum: Object.keys(Rating) },
-        value: { type: String, enum: Object.values(Rating).concat([null]) },
+        key: { type: String },
+        value: { type: Number },
       },
       daysToForecast: { type: Number },
-      preferredReminderHours: [{ type: Number, default: MORNING }],
+      preferredReminderHours: { type: [Number], default: MORNING },
       chatId: { type: Number },
     },
     { timestamps: true }

@@ -1,6 +1,12 @@
 import TelegramBot from "node-telegram-bot-api";
 import { SpotLocation } from "../location/location.types";
-import { ChatAction, Rating, WaveConfiguration, WaveTypeId } from "./types";
+import {
+  ChatAction,
+  Rating,
+  RatingKind,
+  WaveConfiguration,
+  WaveTypeId,
+} from "./types";
 import { RatingSchema } from "./user-notifications-settings.schema";
 
 export const createLocationMessage = (location: SpotLocation) => {
@@ -38,7 +44,7 @@ export const chooseSpotMessage = async (
   });
 };
 
-export const getPreferredSpot = async (
+export const sendPreferredSpot = async (
   chatId: number,
   location: SpotLocation,
   instance: TelegramBot
@@ -61,18 +67,9 @@ export const findWaveConfigurationTypeById = (type: WaveTypeId) => {
 export const getRatingByKey = (
   ratingKey: keyof typeof Rating
 ): RatingSchema => {
-  return {
-    key: ratingKey,
-    value: Rating[ratingKey],
-  };
+  return RatingKind.find((item) => item.key === ratingKey);
 };
 
 export const getRatingByValue = (ratingValue: Rating): RatingSchema => {
-  const t = ratingValue.valueOf();
-  return {
-    key: Rating[ratingValue] as keyof typeof Rating,
-    value: ratingValue,
-  };
+  return RatingKind.find((item) => item.value === ratingValue);
 };
-
-

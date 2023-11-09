@@ -45,15 +45,9 @@ describe("user filter", () => {
     test("should not match the rating if the forecast is less then preferred", () => {
       // Arrange
       const forecast = ForecastFactory.build({
-        rating: {
-          key: Rating[Rating.FAIR] as keyof typeof Rating,
-          value: Rating.FAIR,
-        },
+        rating: getRatingByValue(Rating.FAIR),
       });
-      const preferredRating = {
-        key: Rating[Rating.GOOD] as keyof typeof Rating,
-        value: Rating.GOOD,
-      };
+      const preferredRating = getRatingByValue(Rating.GOOD);
       const isMatch = matchByRating(preferredRating, forecast);
       expect(isMatch).toBeFalsy();
     });
@@ -61,15 +55,9 @@ describe("user filter", () => {
     test("should not match the rating if the forecast is even or better then preferred", () => {
       // Arrange
       const forecast = ForecastFactory.build({
-        rating: {
-          key: Rating[Rating.GOOD] as keyof typeof Rating,
-          value: Rating.GOOD,
-        },
+        rating: getRatingByValue(Rating.GOOD),
       });
-      const preferredRating = {
-        key: Rating[Rating.POOR_TO_FAIR] as keyof typeof Rating,
-        value: Rating.POOR_TO_FAIR,
-      };
+      const preferredRating = getRatingByValue(Rating.POOR_TO_FAIR);
       const isMatch = matchByRating(preferredRating, forecast);
       expect(isMatch).toBeTruthy();
     });
@@ -127,18 +115,12 @@ describe("user filter", () => {
             {
               timestamp: forecastTimestampEvening,
               utcOffset: 0,
-              rating: {
-                key: getRatingByKey("FAIR").key,
-                value: getRatingByValue(Rating.FAIR).value,
-              },
+              rating: getRatingByValue(Rating.FAIR),
             },
             {
               timestamp: forecastTimestampDay,
               utcOffset: 0,
-              rating: {
-                key: getRatingByKey("GOOD").key,
-                value: getRatingByValue(Rating.GOOD).value,
-              },
+              rating: getRatingByValue(Rating.GOOD),
             },
           ],
         },
@@ -161,10 +143,7 @@ describe("user filter", () => {
           min: 0.6,
           max: 1,
         },
-        rating: {
-          key: getRatingByKey("GOOD").key,
-          value: getRatingByValue(Rating.GOOD).value,
-        },
+        rating: getRatingByValue(Rating.GOOD),
         preferredReminderHours: MORNING,
       });
       await UserNotificationSettingsCrudModel.create(userNotificationSettings);
@@ -186,18 +165,12 @@ describe("user filter", () => {
             {
               timestamp: forecastTimestampEvening,
               utcOffset: 0,
-              rating: {
-                key: getRatingByKey("FAIR").key,
-                value: getRatingByValue(Rating.FAIR).value,
-              },
+              rating: getRatingByValue(Rating.FAIR),
             },
             {
               timestamp: forecastTimestampDay,
               utcOffset: 0,
-              rating: {
-                key: getRatingByKey("FAIR").key,
-                value: getRatingByValue(Rating.GOOD).value,
-              },
+              rating: getRatingByValue(Rating.FAIR),
             },
           ],
         },
@@ -220,10 +193,7 @@ describe("user filter", () => {
           min: 0.6,
           max: 1,
         },
-        rating: {
-          key: getRatingByKey("GOOD").key,
-          value: getRatingByValue(Rating.GOOD).value,
-        },
+        rating: getRatingByValue(Rating.GOOD),
         preferredReminderHours: MORNING,
       });
       await UserNotificationSettingsCrudModel.create(userNotificationSettings);
@@ -245,18 +215,12 @@ describe("user filter", () => {
             {
               timestamp: forecastTimestampEvening,
               utcOffset: 0,
-              rating: {
-                key: getRatingByKey("GOOD").key,
-                value: getRatingByValue(Rating.GOOD).value,
-              },
+              rating: getRatingByValue(Rating.GOOD),
             },
             {
               timestamp: forecastTimestampEvening,
               utcOffset: 0,
-              rating: {
-                key: getRatingByKey("GOOD").key,
-                value: getRatingByValue(Rating.GOOD).value,
-              },
+              rating: getRatingByValue(Rating.GOOD),
             },
           ],
         },
@@ -279,10 +243,7 @@ describe("user filter", () => {
           min: 0.6,
           max: 1,
         },
-        rating: {
-          key: getRatingByKey("GOOD").key,
-          value: getRatingByValue(Rating.GOOD).value,
-        },
+        rating: getRatingByValue(Rating.GOOD),
         preferredReminderHours: MORNING,
       });
       await UserNotificationSettingsCrudModel.create(userNotificationSettings);
@@ -305,18 +266,12 @@ describe("user filter", () => {
             {
               timestamp: forecastTimestampEvening,
               utcOffset: 0,
-              rating: {
-                key: getRatingByKey("FAIR").key,
-                value: getRatingByValue(Rating.FAIR).value,
-              },
+              rating: getRatingByValue(Rating.FAIR),
             },
             {
               timestamp: forecastTimestampDay,
               utcOffset: 0,
-              rating: {
-                key: getRatingByKey("FAIR").key,
-                value: getRatingByValue(Rating.FAIR).value,
-              },
+              rating: getRatingByValue(Rating.FAIR),
             },
           ],
         },

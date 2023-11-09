@@ -5,7 +5,10 @@ import { UserNotificationSettingsFactory } from "./user-notification-settings.fa
 
 describe("User Notification Settings", () => {
   describe("setPreferredWavHeight", () => {
+
+
     test("should set wave height for specific chat", async () => {
+
       //arrange
       const userNotificationSettings = UserNotificationSettingsFactory.build({
         chatId: 1,
