@@ -37,6 +37,7 @@ export const matchForecastsByUserPreferences = (
   userPreference: IUserNotificationSettingsSchema,
   forecasts: Forecast[]
 ) => {
+  if(!forecasts || !userPreference) throw new Error('Invalid parameters')
   const waveMatches = forecasts.filter((forecast) =>
     matchByWaveHeight(userPreference.waveHeightRange, forecast)
   );

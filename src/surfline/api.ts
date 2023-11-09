@@ -52,7 +52,7 @@ export const getForecast = async (
     getRating(spotId, days),
   ]);
 
-  return waveForecast.data.wave.map((wave) => {
+  return waveForecast?.wave?.map((wave) => {
     const correspondingRating = ratingForecast.data.rating.find(
       (rating) => rating.timestamp === wave.timestamp
     );

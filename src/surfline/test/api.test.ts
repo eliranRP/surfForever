@@ -1,3 +1,4 @@
+import { WaveFactory } from "../../api/user-filters/test/user-filter.factory";
 import { Rating } from "../../api/users/types";
 import { getRatingByKey, getRatingByValue } from "../../api/users/utils";
 import * as api from "../api";
@@ -32,46 +33,17 @@ describe("surfline api", () => {
         ],
       },
     };
-
     const WAVE: WaveHeightResponse = {
-      data: {
-        wave: [
-          {
-            timestamp: TIMESTAMP1,
-            probability: 100,
-            utcOffset: 0,
-            surf: {
-              min: 1.2,
-              max: 1.8,
-              optimalScore: 2,
-              plus: false,
-              humanRelation: "Chest to overhead",
-              raw: {
-                min: 1.37,
-                max: 1.67,
-              },
-            },
-            power: 734.22422,
-          },
-          {
-            timestamp: TIMESTAMP2,
-            probability: 100,
-            utcOffset: 0,
-            surf: {
-              min: 0.6,
-              max: 1,
-              optimalScore: 2,
-              plus: false,
-              humanRelation: "Chest to overhead",
-              raw: {
-                min: 1.42,
-                max: 1.7,
-              },
-            },
-            power: 794.86928,
-          },
-        ],
-      },
+      wave: [
+        WaveFactory.build({
+          timestamp: TIMESTAMP1,
+          surf: { min: 1.2, max: 1.8 },
+        }),
+        WaveFactory.build({
+          timestamp: TIMESTAMP2,
+          surf: { min: 0.6, max: 1 },
+        }),
+      ],
     };
 
     jest.spyOn(api, "getRating").mockResolvedValue(RATINGS);

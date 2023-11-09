@@ -64,7 +64,7 @@ export interface SearchResult {
 }
 
 export interface WaveHeightResponse {
-  data: { wave: WaveData[] };
+   wave: WaveData[] ;
 }
 
 export interface SpotDetail {
@@ -110,7 +110,7 @@ interface Surf {
     max: number;
   };
 }
-interface WaveData {
+export interface WaveData {
   timestamp: number;
   probability: number;
   utcOffset: number;

@@ -6,7 +6,7 @@ import {
   matchByRating,
   matchByWaveHeight,
 } from "../user-filters";
-import { ForecastFactory } from "./user-filter.factory";
+import { ForecastFactory, WaveFactory } from "./user-filter.factory";
 import { WaveHeightRange } from "../../users/user-notifications-settings.schema";
 import { RatingResponse, WaveHeightResponse } from "../../../surfline/types";
 import { getRatingByKey, getRatingByValue } from "../../users/utils";
@@ -145,44 +145,10 @@ describe("user filter", () => {
       };
 
       const WAVE: WaveHeightResponse = {
-        data: {
-          wave: [
-            {
-              timestamp: forecastTimestampEvening,
-              probability: 100,
-              utcOffset: 0,
-              surf: {
-                min: 1.2,
-                max: 1.8,
-                optimalScore: 2,
-                plus: false,
-                humanRelation: "Chest to overhead",
-                raw: {
-                  min: 1.37,
-                  max: 1.67,
-                },
-              },
-              power: 734.22422,
-            },
-            {
-              timestamp: forecastTimestampDay,
-              probability: 100,
-              utcOffset: 0,
-              surf: {
-                min: 0,
-                max: 0.3,
-                optimalScore: 2,
-                plus: false,
-                humanRelation: "Chest to overhead",
-                raw: {
-                  min: 1.42,
-                  max: 1.7,
-                },
-              },
-              power: 794.86928,
-            },
-          ],
-        },
+        wave: [
+          WaveFactory.build({ timestamp: forecastTimestampEvening }),
+          WaveFactory.build({ timestamp: forecastTimestampDay }),
+        ],
       };
 
       jest.spyOn(api, "getRating").mockResolvedValue(RATINGS);
@@ -238,44 +204,10 @@ describe("user filter", () => {
       };
 
       const WAVE: WaveHeightResponse = {
-        data: {
-          wave: [
-            {
-              timestamp: forecastTimestampEvening,
-              probability: 100,
-              utcOffset: 0,
-              surf: {
-                min: 1.2,
-                max: 1.8,
-                optimalScore: 2,
-                plus: false,
-                humanRelation: "Chest to overhead",
-                raw: {
-                  min: 1.37,
-                  max: 1.67,
-                },
-              },
-              power: 734.22422,
-            },
-            {
-              timestamp: forecastTimestampDay,
-              probability: 100,
-              utcOffset: 0,
-              surf: {
-                min: 0,
-                max: 0.3,
-                optimalScore: 2,
-                plus: false,
-                humanRelation: "Chest to overhead",
-                raw: {
-                  min: 1.42,
-                  max: 1.7,
-                },
-              },
-              power: 794.86928,
-            },
-          ],
-        },
+        wave: [
+          WaveFactory.build({ timestamp: forecastTimestampEvening }),
+          WaveFactory.build({ timestamp: forecastTimestampDay }),
+        ],
       };
 
       jest.spyOn(api, "getRating").mockResolvedValue(RATINGS);
@@ -331,44 +263,10 @@ describe("user filter", () => {
       };
 
       const WAVE: WaveHeightResponse = {
-        data: {
-          wave: [
-            {
-              timestamp: forecastTimestampEvening,
-              probability: 100,
-              utcOffset: 0,
-              surf: {
-                min: 0,
-                max: 0,
-                optimalScore: 2,
-                plus: false,
-                humanRelation: "Chest to overhead",
-                raw: {
-                  min: 1.37,
-                  max: 1.67,
-                },
-              },
-              power: 734.22422,
-            },
-            {
-              timestamp: forecastTimestampEvening,
-              probability: 100,
-              utcOffset: 0,
-              surf: {
-                min: 0,
-                max: 0,
-                optimalScore: 2,
-                plus: false,
-                humanRelation: "Chest to overhead",
-                raw: {
-                  min: 1.42,
-                  max: 1.7,
-                },
-              },
-              power: 794.86928,
-            },
-          ],
-        },
+        wave: [
+          WaveFactory.build({ timestamp: forecastTimestampEvening }),
+          WaveFactory.build({ timestamp: forecastTimestampEvening }),
+        ],
       };
 
       jest.spyOn(api, "getRating").mockResolvedValue(RATINGS);
@@ -425,44 +323,22 @@ describe("user filter", () => {
       };
 
       const WAVE: WaveHeightResponse = {
-        data: {
-          wave: [
-            {
-              timestamp: forecastTimestampEvening,
-              probability: 100,
-              utcOffset: 0,
-              surf: {
-                min: 0,
-                max: 0,
-                optimalScore: 2,
-                plus: false,
-                humanRelation: "Chest to overhead",
-                raw: {
-                  min: 1.37,
-                  max: 1.67,
-                },
-              },
-              power: 734.22422,
+        wave: [
+          WaveFactory.build({
+            timestamp: forecastTimestampEvening,
+            surf: {
+              min: 0,
+              max: 0,
             },
-            {
-              timestamp: forecastTimestampDay,
-              probability: 100,
-              utcOffset: 0,
-              surf: {
-                min: 0,
-                max: 0,
-                optimalScore: 2,
-                plus: false,
-                humanRelation: "Chest to overhead",
-                raw: {
-                  min: 1.42,
-                  max: 1.7,
-                },
-              },
-              power: 794.86928,
+          }),
+          WaveFactory.build({
+            timestamp: forecastTimestampDay,
+            surf: {
+              min: 0,
+              max: 0,
             },
-          ],
-        },
+          }),
+        ],
       };
 
       jest.spyOn(api, "getRating").mockResolvedValue(RATINGS);
