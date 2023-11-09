@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
-import { GeoPoint, pointSchema } from "../schema/point.schema";
+import { GeoPoint, pointSchema } from "./point.schema";
 import { SpotLocation } from "./location.types";
-
 
 export const spotSchema = new mongoose.Schema<SpotLocation>({
   spotId: {

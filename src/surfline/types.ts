@@ -1,3 +1,9 @@
+import { Rating } from "../api/users/types";
+import {
+  RatingSchema,
+  WaveHeightRange,
+} from "../api/users/user-notifications-settings.schema";
+
 export interface SearchResult {
   took: number;
   timed_out: boolean;
@@ -57,19 +63,31 @@ export interface SearchResult {
   status: number;
 }
 
-export interface ForecastObject {
-  associated: AssociatedData;
-  data: Data[];
-  permissions: Permissions;
+export interface WaveHeightResponse {
+  data: { wave: WaveData[] };
 }
 
 export interface SpotDetail {
   spot: { name: string };
 }
 
-interface Location {
-  lon: number;
-  lat: number;
+export interface Forecast {
+  timestamp: number;
+  wave: WaveHeightRange;
+  rating: {
+    key: keyof typeof Rating;
+    value: Rating;
+  };
+}
+export interface RatingResponse {
+  data: {
+    rating: RatingData[];
+  };
+}
+interface RatingData {
+  timestamp: number;
+  utcOffset: number;
+  rating: RatingSchema;
 }
 
 interface Swell {
@@ -81,7 +99,6 @@ interface Swell {
   directionMin: number;
   optimalScore: number;
 }
-
 interface Surf {
   min: number;
   max: number;
@@ -93,64 +110,11 @@ interface Surf {
     max: number;
   };
 }
-
-interface SuggestOptions {
-  text: string;
-  offset: number;
-  length: number;
-  options: Options[];
-}
-
-interface Options {
-  text: string;
-  _index: string;
-  _type: string;
-  _id: string;
-  _score: number;
-  _source: {
-    breadCrumbs: string[];
-    name: string;
-    cams: any[]; // You can define a more specific type for "cams"
-    location: Location;
-    href: string;
-  };
-  contexts: {
-    type: string[];
-    location: string[];
-  };
-}
-
-interface Permissions {
-  data: any[]; // You can define a more specific type
-  violations: Violation[];
-}
-
-interface Violation {
-  code: number;
-  message: string;
-  permission: {
-    name: string;
-    required: boolean;
-  };
-}
-
-interface Data {
+interface WaveData {
   timestamp: number;
   probability: number;
   utcOffset: number;
   surf: Surf;
   power: number;
-  swells: Swell[];
-}
-
-interface AssociatedData {
-  units: {
-    swellHeight: string;
-    waveHeight: string;
-  };
-  utcOffset: number;
-  location: Location;
-  forecastLocation: Location;
-  offshoreLocation: Location;
-  runInitializationTimestamp: number;
+  // swells: Swell[];
 }

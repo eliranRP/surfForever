@@ -13,7 +13,7 @@ abstract class BaseCrudModel<T extends Document> {
   }
 
   async findById(id: string): Promise<T | null> {
-    const item = await this.model.findById(id);
+    const item = await this.model.findById<T>(id);
     return item;
   }
 

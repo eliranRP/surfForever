@@ -1,28 +1,45 @@
 import BaseCrudModel from "../../framework/base.model";
 import logger from "../../framework/logger.manager";
-import { getForecast, spotDetails } from "../../surfline/api";
-import { locationByName } from "../location/location.service";
+import { spotDetails } from "../../surfline/api";
+import { searchSpotByName } from "../location/location.service";
 import { SpotLocation } from "../location/location.types";
-import { WaveConfiguration, WaveHeightType } from "./const";
+import { Hours, HoursKind, Rating, WaveTypeId } from "./types";
 import UserNotificationSettings, {
   IUserNotificationSettingsSchema,
 } from "./user-notifications-settings.schema";
+import { findWaveConfigurationTypeById, getRatingByKey } from "./utils";
 
 class UserNotificationSettingsCrudModel extends BaseCrudModel<IUserNotificationSettingsSchema> {
   constructor() {
     super(UserNotificationSettings);
   }
 
-  async setPreferredWavHeight(chatId: number, waveHeight: WaveHeightType) {
-    const selectedWaveHight = WaveConfiguration.find(
-      (option) => option.id === waveHeight
-    );
-    if (!waveHeight || !selectedWaveHight)
-      throw new Error("Invalid wave height");
-
+  async setPreferredHours(chatId: number, hoursKey: HoursKind) {
+    const selectedHours = Hours[hoursKey].values;
+    if (!selectedHours) throw new Error("Invalid hours");
     return await this.upsert(
       { chatId },
-      { waveConfigurationId: waveHeight, chatId }
+      { preferredReminderHours: selectedHours, chatId }
+    );
+  }
+
+  async setPreferredRating(chatId: number, ratingKey: keyof typeof Rating) {
+    const selectedRating = getRatingByKey(ratingKey);
+    if (!selectedRating) throw new Error("Invalid rating");
+    return await this.upsert(
+      { chatId },
+      {
+        rating: selectedRating,
+        chatId,
+      }
+    );
+  }
+
+  async setPreferredWavHeight(chatId: number, waveTypeId: WaveTypeId) {
+    const selectedWaveHight = findWaveConfigurationTypeById(waveTypeId);
+    return await this.upsert(
+      { chatId },
+      { waveHeightRange: selectedWaveHight.height, chatId }
     );
   }
 
@@ -32,7 +49,7 @@ class UserNotificationSettingsCrudModel extends BaseCrudModel<IUserNotificationS
       logger.error("Invalid spot id");
       throw new Error("Invalid spot id");
     }
-    const enrichDetails = (await locationByName(spot.spot.name)).filter(
+    const enrichDetails = (await searchSpotByName(spot.spot.name)).filter(
       (spot) => spot.spotId === spotId
     );
     if (enrichDetails.length == 0)

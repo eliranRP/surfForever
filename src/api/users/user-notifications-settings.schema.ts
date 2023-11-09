@@ -1,15 +1,25 @@
 import { Schema, Document, model } from "mongoose";
-import { WaveHeightType } from "./const";
 import { spotSchema } from "../location/location.schema";
 import { SpotLocation } from "../location/location.types";
+import { MORNING, Rating } from "./types";
+
+export interface WaveHeightRange {
+  min: number;
+  max: number;
+}
+
+export interface RatingSchema {
+  key: keyof typeof Rating;
+  value: Rating;
+}
 
 export interface IUserNotificationSettings {
-  waveConfigurationId: WaveHeightType;
+  waveHeightRange: WaveHeightRange;
   chatId: number;
-  spotName: string;
   spot: SpotLocation;
   daysToForecast: number;
-  preferredReminderHours: number;
+  preferredReminderHours: number[];
+  rating: RatingSchema;
 }
 
 export type IUserNotificationSettingsSchema = IUserNotificationSettings &
@@ -18,16 +28,19 @@ export type IUserNotificationSettingsSchema = IUserNotificationSettings &
 const UserNotificationSettingsSchema =
   new Schema<IUserNotificationSettingsSchema>(
     {
-      waveConfigurationId: {
-        type: String,
-        enum: ["poor", "good", "high", "very_high"],
+      waveHeightRange: {
+        min: { type: Number },
+        max: { type: Number },
       },
       spot: {
         type: spotSchema,
       },
-      spotName: { type: String },
+      rating: {
+        key: { type: String, enum: Object.keys(Rating) },
+        value: { type: String, enum: Object.values(Rating).concat([null]) },
+      },
       daysToForecast: { type: Number },
-      preferredReminderHours: { type: Number, default: 20 },
+      preferredReminderHours: [{ type: Number, default: MORNING }],
       chatId: { type: Number },
     },
     { timestamps: true }

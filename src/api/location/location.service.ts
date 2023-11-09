@@ -1,7 +1,7 @@
 import { searchForPlace } from "../../surfline/api";
 import { SpotLocation } from "./location.types";
 
-export const locationByName = async (
+export const searchSpotByName = async (
   locationName: string
 ): Promise<SpotLocation[]> => {
   const locationResult = await searchForPlace(locationName);

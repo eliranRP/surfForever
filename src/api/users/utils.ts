@@ -1,6 +1,7 @@
 import TelegramBot from "node-telegram-bot-api";
 import { SpotLocation } from "../location/location.types";
-import { ChatAction } from "./types";
+import { ChatAction, Rating, WaveConfiguration, WaveTypeId } from "./types";
+import { RatingSchema } from "./user-notifications-settings.schema";
 
 export const createLocationMessage = (location: SpotLocation) => {
   const message = `
@@ -21,7 +22,7 @@ export const createLocationMessage = (location: SpotLocation) => {
   return { replyMarkup, message };
 };
 
-export const senLocationWithDetails = async (
+export const chooseSpotMessage = async (
   chatId: number,
   location: SpotLocation,
   instance: TelegramBot
@@ -37,7 +38,7 @@ export const senLocationWithDetails = async (
   });
 };
 
-export const senLocationWithDetailsWithoutReply = async (
+export const getPreferredSpot = async (
   chatId: number,
   location: SpotLocation,
   instance: TelegramBot
@@ -50,3 +51,28 @@ export const senLocationWithDetailsWithoutReply = async (
   const markupMessage = createLocationMessage(location);
   await instance.sendMessage(chatId, markupMessage.message);
 };
+
+export const findWaveConfigurationTypeById = (type: WaveTypeId) => {
+  const result = WaveConfiguration.find((item) => item.id === type);
+  if (!result) throw new Error("Invalid wave height");
+  return result;
+};
+
+export const getRatingByKey = (
+  ratingKey: keyof typeof Rating
+): RatingSchema => {
+  return {
+    key: ratingKey,
+    value: Rating[ratingKey],
+  };
+};
+
+export const getRatingByValue = (ratingValue: Rating): RatingSchema => {
+  const t = ratingValue.valueOf();
+  return {
+    key: Rating[ratingValue] as keyof typeof Rating,
+    value: ratingValue,
+  };
+};
+
+
