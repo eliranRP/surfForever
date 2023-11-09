@@ -5,10 +5,7 @@ import { UserNotificationSettingsFactory } from "./user-notification-settings.fa
 
 describe("User Notification Settings", () => {
   describe("setPreferredWavHeight", () => {
-
-
     test("should set wave height for specific chat", async () => {
-
       //arrange
       const userNotificationSettings = UserNotificationSettingsFactory.build({
         chatId: 1,
@@ -19,14 +16,14 @@ describe("User Notification Settings", () => {
       const chatId = 2;
       await UserNotificationSettingsCrudModel.setPreferredWavHeight(
         chatId,
-        WaveTypeId.GOOD
+        WaveTypeId.FAIR
       );
 
       //assert
       const result = await UserNotificationSettingsCrudModel.findOne({
         chatId,
       });
-      const selectedWaveHight = findWaveConfigurationTypeById(WaveTypeId.GOOD);
+      const selectedWaveHight = findWaveConfigurationTypeById(WaveTypeId.FAIR);
       expect(result?.waveHeightRange.max).toBe(selectedWaveHight.height.max);
       expect(result?.waveHeightRange.min).toBe(selectedWaveHight.height.min);
       expect(result?.chatId).toBe(chatId);

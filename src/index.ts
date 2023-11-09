@@ -1,16 +1,15 @@
 require("dotenv").config();
 
 import { MongoManager } from "./database/mongoose-manager";
-import TelegramBotManager from "./framework/bot-manager";
 import "./framework/logger.manager";
 import "./api/users/user-notifications-settings.bot";
+import { agenda, scheduleNotifier } from "./scheduler/scheduler";
+import logger from "./framework/logger.manager";
 
 (async () => {
+  logger.info("App starting...");
   await MongoManager.connect();
-  // if (process.env.NODE_ENV == "production") {
-  //     const user = await UserCrudModel.findOne({ phoneNumber: "0547919327" });
-  //     if (user?.chatId) {
-  //         TelegramBotManager.getInstance().sendMessage(user?.chatId, `There server was restarted`);
-  //     }
-  // }
+  await agenda.start();
+  await scheduleNotifier();
+  logger.info("App running");
 })();

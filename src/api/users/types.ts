@@ -39,7 +39,14 @@ export enum HoursKind {
   AllDay,
 }
 
-export const Hours = [
+export interface HourType {
+  values: number[];
+  key: HoursKind;
+  display: string;
+  emoji: string;
+}
+
+export const Hours: HourType[] = [
   { values: MORNING, key: HoursKind.Morning, display: "Morning", emoji: "🌞" },
   {
     values: AFTERNOON,
@@ -80,9 +87,9 @@ export enum Rating {
 
 export enum WaveTypeId {
   POOR = 1,
-  GOOD = 2,
-  HIGH = 3,
-  VERY_HIGH = 4,
+  FAIR = 2,
+  GOOD = 3,
+  VERY_GOOD = 4,
 }
 
 export interface WaveConfigurationType {
@@ -102,21 +109,21 @@ export const WaveConfiguration: WaveConfigurationType[] = [
     },
   },
   {
-    id: WaveTypeId.GOOD,
+    id: WaveTypeId.FAIR,
     height: {
       min: 0.6,
       max: 0.8,
     },
   },
   {
-    id: WaveTypeId.HIGH,
+    id: WaveTypeId.GOOD,
     height: {
       min: 0.8,
       max: 1,
     },
   },
   {
-    id: WaveTypeId.VERY_HIGH,
+    id: WaveTypeId.VERY_GOOD,
     height: {
       min: 1,
       max: 2,

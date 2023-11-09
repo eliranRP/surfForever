@@ -5,8 +5,6 @@ import { searchSpotByName } from "../location/location.service";
 import logger from "../../framework/logger.manager";
 import {
   ChatAction,
-  Rating,
-  RatingDisplayName,
   WaveHeightResponseButton,
   SurfingLocationResponseButton,
   WaveConfiguration,
@@ -16,7 +14,10 @@ import {
   RatingKind,
 } from "./types";
 import { chooseSpotMessage, sendPreferredSpot } from "./utils";
-import { MESSAGES_TYPE } from "../messages/message.type";
+import {
+  MESSAGES_TYPE,
+  getPreferredSettingMessage,
+} from "../messages/message.type";
 import { chunkArray } from "../utils/utils";
 import { checkMatchBetweenForecastAndUserSettings } from "../user-filters/user-filters";
 
@@ -29,10 +30,25 @@ instance.onText(/\/test/, async (msg: Message) => {
   await instance.sendMessage(chatId, message);
 });
 
+instance.onText(/\/help/, async (msg: Message) => {
+  const chatId = msg.chat.id;
+  await instance.sendMessage(chatId, MESSAGES_TYPE.HELP);
+});
+
 instance.onText(/\/settings/, async (msg: Message) => {
   const chatId = msg.chat.id;
   const settings = await UserNotificationSettingsCrudModel.findOne({ chatId });
-  await instance.sendMessage(chatId, JSON.stringify(settings, null, 2));
+  if (settings) {
+    return await instance.sendMessage(
+      chatId,
+      getPreferredSettingMessage(settings),
+      {
+        parse_mode: "HTML",
+      }
+    );
+  }
+
+  return await instance.sendMessage(chatId, MESSAGES_TYPE.NO_SETTINGS);
 });
 
 instance.onText(/\/location/, async (msg: Message) => {
@@ -126,7 +142,7 @@ instance.onText(/\/hours/, async (msg: Message) => {
   );
 });
 
-instance.onText(/\/daysToForecast/, async (msg: Message) => {
+instance.onText(/\/daystoforecast/, async (msg: Message) => {
   const chatId = msg.chat.id;
   const namePrompt = await instance.sendMessage(
     chatId,
@@ -171,7 +187,10 @@ instance.onText(/\/favorite/, async (msg: Message) => {
     await sendPreferredSpot(chatId, settings.spot, instance);
     return;
   }
-  await instance.sendMessage(chatId, "You should choose location, long press on /location and type with the command the name of your favorite spot");
+  await instance.sendMessage(
+    chatId,
+    "You should choose location, long press on /location and type with the command the name of your favorite spot"
+  );
 });
 
 // Handle inline keyboard button callbacks

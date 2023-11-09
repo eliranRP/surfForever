@@ -2,6 +2,7 @@ import TelegramBot from "node-telegram-bot-api";
 import { SpotLocation } from "../location/location.types";
 import {
   ChatAction,
+  Hours,
   Rating,
   RatingKind,
   WaveConfiguration,
@@ -72,4 +73,11 @@ export const getRatingByKey = (
 
 export const getRatingByValue = (ratingValue: Rating): RatingSchema => {
   return RatingKind.find((item) => item.value === ratingValue);
+};
+
+export const getHourByKind = (option: number[]) => {
+  const match = Hours.filter((item) => item.values[0] === option[0]);
+  if (match.length > 0) {
+    return match[0];
+  }
 };
