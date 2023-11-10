@@ -1,3 +1,4 @@
+import logger from "../../framework/logger.manager";
 import { searchForPlace } from "../../surfline/api";
 import { SpotLocation } from "./location.types";
 
@@ -5,12 +6,18 @@ export const searchSpotByName = async (
   locationName: string
 ): Promise<SpotLocation[]> => {
   const locationResult = await searchForPlace(locationName);
-  if (locationResult.length == 0) throw new Error("Location not found");
+  if (locationResult.length == 0) {
+    logger.error("Location not found", locationName);
+    throw new Error("Location not found");
+  }
 
   const spots = locationResult[0].hits.hits.filter(
     (hit) => hit._type === "spot"
   );
-  if (spots.length == 0) throw new Error("Location not found");
+  if (spots.length == 0) {
+    logger.error("No hits for location", { locationName, locationResult });
+    throw new Error("Location not found");
+  }
   return spots
     .map((spot) => {
       return {

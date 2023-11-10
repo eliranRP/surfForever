@@ -11,15 +11,19 @@ export const agenda = new Agenda({
   db: { address: connection, collection: "schedulers" },
 });
 
-const instance =TelegramBotManager.getInstance();
+const instance = TelegramBotManager.getInstance();
 
 export const SCHEDULE_NOTIFIER = "schedule_notifier";
 
 export const scheduleNotifier = async () => {
-  logger.debug("initialize scheduleNotifier");
+  logger.info("initializing scheduleNotifier");
+  try {
     const result = await agenda.every("0 16 * * *", SCHEDULE_NOTIFIER);
-//   const result = await agenda.every("5 seconds", SCHEDULE_NOTIFIER);
-  return result;
+    return result;
+  } catch (error) {
+    logger.error("Failed to initialize scheduleNotifier", error);
+  }
+
 };
 
 agenda.define(SCHEDULE_NOTIFIER, async (job) => {
@@ -33,14 +37,10 @@ agenda.define(SCHEDULE_NOTIFIER, async (job) => {
       );
       if (hasMatches) {
         logger.info("has match:  ", settings);
-         await sendPreferredSpot(
-          settings.chatId,
-          settings.spot,
-          instance
-        );
+        await sendPreferredSpot(settings.chatId, settings.spot, instance);
 
-       await instance.sendMessage(settings.chatId, MESSAGES_TYPE.MATCH);
-       return;
+        await instance.sendMessage(settings.chatId, MESSAGES_TYPE.MATCH);
+        return;
       }
       logger.info("No match:  ", settings);
     })
