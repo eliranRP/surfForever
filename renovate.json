@@ -1,0 +1,19 @@
+{
+  "extends": ["config:base"],
+  "baseBranches": ["main"],
+  "vulnerabilityAlerts": {
+    "labels": ["security"]
+  },
+  "packageRules": [
+    {
+
+      "internalChecksFilter":"strict",
+      "matchDatasources": ["npm"],
+      "minimumReleaseAge": "10 days",
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "automerge": true,
+      "ignoreTests": false,
+      "automergeType": "pr"
+    }
+  ]
+}

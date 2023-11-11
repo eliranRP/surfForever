@@ -14,7 +14,7 @@ runs:
     - name: Push to selected branch
       run: |
         git config --global user.name 'bot'
-        git config --global user.email 'bot@moveohls.com'
+        git config --global user.email 'bot@cywhale.com'
         git remote set-url origin https://x-access-token:${{ inputs.github-secret }}@github.com/$GITHUB_REPOSITORY
         git checkout -b "${{ inputs.environment-name }}"
         git reset --hard "$GITHUB_REF_NAME"

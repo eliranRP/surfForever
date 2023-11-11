@@ -234,6 +234,6 @@ instance.on("callback_query", async (query) => {
         break;
     }
   } catch (error) {
-    console.log(error);
+    logger.error(error);
   }
 });
