@@ -11,14 +11,5 @@ jobs:
         id: release
         with:
           release-type: node
-      - uses: actions/checkout@v3
-      - name: Develop Deployment
-        if: ${{ steps.release.outputs.release_created }}
-        run: |
-            git config --global user.name 'bot'
-            git config --global user.email 'bot@moveohls.com'
-            git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY
-            git checkout -b "development"
-            git reset --hard "$GITHUB_REF_NAME"
-            git push -f origin development
+
 
