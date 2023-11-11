@@ -84,7 +84,7 @@ const ratingMessage = (rating: RatingSchema) => {
 const spotMessage = (spot: SpotLocation) => {
   return spot
     ? `${spot.name} - ${spot.breadCrumbs.join()} 
-    You can click on the link to see the spot forecast: <br>
+    You can click on the link to see the spot forecast:
     <a> ${spot.href} </a>`
     : "No spot selected";
 };
