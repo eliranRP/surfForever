@@ -7,7 +7,7 @@ export const searchSpotByName = async (
 ): Promise<SpotLocation[]> => {
   const locationResult = await searchForPlace(locationName);
   if (locationResult.length == 0) {
-    logger.error("Location not found", locationName);
+    logger.error(`Location not found  location: ${locationName}` );
     throw new Error("Location not found");
   }
 
@@ -15,7 +15,7 @@ export const searchSpotByName = async (
     (hit) => hit._type === "spot"
   );
   if (spots.length == 0) {
-    logger.error("No hits for location", { locationName, locationResult });
+    logger.error(`Location not found  location: ${locationName} location result: ${locationResult}` );
     throw new Error("Location not found");
   }
   return spots
