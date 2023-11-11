@@ -28,7 +28,7 @@
     "lodash": "4.17.21",
     "mongodb": "5.9.1",
     "mongoose": "8.0.0",
-    "node-telegram-bot-api": "^0.63.0",
+    "node-telegram-bot-api": "^0.64.0",
     "ts-node": "10.9.1",
     "winston": "3.11.0"
   },
