@@ -1,18 +1,17 @@
 import axios, { AxiosInstance, AxiosResponse } from "axios";
 import logger from "./logger.manager";
 
-// export const headers = {
-//   'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
-//   'host': 'api.fizikal.co.il',
-//   'version': '20.0.3840'
-// };
+export const headers = {
+  "user-agent":
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36",
+};
 
 class ApiClient {
   private axiosInstance: AxiosInstance;
 
   constructor() {
     this.axiosInstance = axios.create();
-
+    this.axiosInstance.defaults.headers.common = headers;
     this.axiosInstance.interceptors.request.use((request) => {
       logger.debug(`Starting Request request headers:${request.headers}`);
       logger.debug(`Starting Request request url:${request.url}`);
