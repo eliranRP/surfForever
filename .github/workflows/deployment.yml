@@ -24,7 +24,7 @@ jobs:
       - ci
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - id: environment-reset-head
         uses: ./.github/actions/environment-reset-head
         with:
