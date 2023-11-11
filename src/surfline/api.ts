@@ -1,4 +1,6 @@
+import { error } from "console";
 import { apiClient } from "../framework/api-manager";
+import logger from "../framework/logger.manager";
 import {
   WaveHeightResponse,
   RatingResponse,
@@ -10,9 +12,14 @@ import {
 export const searchForPlace = async (
   query: string
 ): Promise<SearchResult[]> => {
-  return await apiClient.get(
-    `${process.env.SURFLINE_BASE_URL}/search/site?q=${query}&querySize=10&suggestionSize=10&newsSearch=true`
-  );
+  return await apiClient
+    .get(
+      `${process.env.SURFLINE_BASE_URL}/search/site?q=${query}&querySize=10&suggestionSize=10&newsSearch=true`
+    )
+    .catch((error) => {
+      logger.error(error);
+      throw error;
+    });
 };
 
 export const getWave = async (
@@ -20,16 +27,24 @@ export const getWave = async (
   days: number = 2,
   intervalHours: number = 6
 ): Promise<WaveHeightResponse> => {
-  const response = await apiClient.get(
-    `${process.env.SURFLINE_BASE_URL}/kbyg/spots/forecasts/wave?spotId=${spotId}&days=${days}&intervalHours=${intervalHours}&cacheEnabled=true&units%5BswellHeight%5D=M&units%5BwaveHeight%5D=M`
-  );
+  const response = await apiClient
+    .get(
+      `${process.env.SURFLINE_BASE_URL}/spots/forecasts/wave?spotId=${spotId}&days=${days}&intervalHours=${intervalHours}&cacheEnabled=true&units%5BswellHeight%5D=M&units%5BwaveHeight%5D=M`
+    )
+    .catch((error) => {
+      logger.error(error);
+      throw error;
+    });
   return response.data;
 };
 
 export const spotDetails = async (spotId: string): Promise<SpotDetail> => {
-  return await apiClient.get(
-    `${process.env.SURFLINE_BASE_URL}/kbyg/spots/details?spotId=${spotId}`
-  );
+  return await apiClient
+    .get(`${process.env.SURFLINE_BASE_URL}/spots/details?spotId=${spotId}`)
+    .catch((error) => {
+      logger.error(error);
+      throw error;
+    });
 };
 
 export const getRating = async (
@@ -38,7 +53,7 @@ export const getRating = async (
   intervalHours: number = 1
 ): Promise<RatingResponse> => {
   const response = await apiClient.get(
-    `${process.env.SURFLINE_BASE_URL}/kbyg/spots/forecasts/rating?spotId=${spotId}&days=${days}&intervalHours=${intervalHours}&cacheEnabled=true`
+    `${process.env.SURFLINE_BASE_URL}/spots/forecasts/rating?spotId=${spotId}&days=${days}&intervalHours=${intervalHours}&cacheEnabled=true`
   );
   return response;
 };

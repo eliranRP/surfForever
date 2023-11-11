@@ -22,17 +22,17 @@ settings: /settings To get your current preferences.
 
 export const MESSAGES_TYPE = {
   LOCATION_EMOJI:
-    "Great  🏖️🏖️🏖️🏖️🏖️, you will receive a notification on the spot you chosen",
+    "Awesome news! 🏖️🏖️🏖️🏖️🏖️ You'll get a notification right at the spot you selected!",
   WAVE_EMOJI:
-    "Great  🌊🌊🌊🌊, you will receive a notification when the wave heights are in the range you chose",
+    "Fantastic! 🌊🌊🌊🌊 You'll be notified once the wave heights fall within your selected range.",
   RATING_EMOJI:
-    "Great  ⭐⭐⭐⭐⭐, you will receive a notification when the rating is in the range you chose",
+    "Awesome! ⭐⭐⭐⭐⭐ You'll get a notification as soon as the rating falls within your chosen range.",
   HOURS_EMOJI:
-    "Great  🏄🏄‍♀️🏄🏄‍♀️, you will receive a notification when we find a forecast that suite your preferences and the hours is in the range you chose",
+    "Fantastic! 🏄🏄‍♀️🏄🏄‍♀️ You'll receive a notification when we discover a forecast that matches your preferences, and the hours are within the range you've selected.",
   HELP: help,
-  MATCH: `⭐⭐⭐⭐⭐ Yaa we found a match be ready to go! 🏄‍♀️🏄‍♀️🏄‍♀️ You can follow the link to see full forecast`,
+  MATCH: `⭐⭐⭐⭐⭐ Hooray! We found a match, so get ready to hit the waves! 🏄‍♀️🏄‍♀️🏄‍♀️ Follow the link to view the full forecast.`,
   NO_SETTINGS:
-    "You don't have any settings yet. Use /help to see your options.",
+    "It appears that you haven't configured any settings yet. Utilize the command /help to explore the options available to you.",
 };
 
 export const getHourMessage = (option: HourType) => {
@@ -84,6 +84,7 @@ const ratingMessage = (rating: RatingSchema) => {
 const spotMessage = (spot: SpotLocation) => {
   return spot
     ? `${spot.name} - ${spot.breadCrumbs.join()} 
-    <a>You can click on the link to see the spot forecast: ${spot.href} </a>`
+    You can click on the link to see the spot forecast: <br>
+    <a> ${spot.href} </a>`
     : "No spot selected";
 };

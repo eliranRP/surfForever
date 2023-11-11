@@ -21,13 +21,12 @@ export const scheduleNotifier = async () => {
     const result = await agenda.every("0 16 * * *", SCHEDULE_NOTIFIER);
     return result;
   } catch (error) {
-    logger.error("Failed to initialize scheduleNotifier", error);
+    logger.error(`Failed to initialize scheduleNotifier error: ${error}`);
   }
-
 };
 
 agenda.define(SCHEDULE_NOTIFIER, async (job) => {
-  logger.info("running scheduleNotifier", job.attrs.data);
+  logger.info("running scheduleNotifier");
   const usersSettings = await UserNotificationSettingsCrudModel.findMany({});
   logger.info(`notifier run on ${usersSettings.length} users`);
   await Promise.all(
@@ -36,14 +35,14 @@ agenda.define(SCHEDULE_NOTIFIER, async (job) => {
         settings.chatId
       );
       if (hasMatches) {
-        logger.info("has match:  ", settings);
+        logger.info(`has match!  settings: ${settings}`);
         await sendPreferredSpot(settings.chatId, settings.spot, instance);
 
         await instance.sendMessage(settings.chatId, MESSAGES_TYPE.MATCH);
         return;
       }
-      logger.info("No match:  ", settings);
+      logger.info(`No match!  settings: ${settings} `);
     })
   );
-  logger.info("finish running scheduleNotifier", job.attrs.data);
+  logger.info("finish running scheduleNotifier");
 });

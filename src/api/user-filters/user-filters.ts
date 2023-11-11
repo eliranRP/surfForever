@@ -39,7 +39,7 @@ export const matchForecastsByUserPreferences = (
   forecasts: Forecast[]
 ) => {
   if (!forecasts || !userPreference) {
-    logger.error("Invalid parameters", forecasts, userPreference);
+    logger.error(`Invalid parameters forecasts: ${forecasts}, userPreference: ${userPreference}`);
     throw new Error("Invalid parameters");
   }
   logger.debug(`forecast: ${forecasts}`);
