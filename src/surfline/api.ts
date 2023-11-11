@@ -1,4 +1,4 @@
-import { error } from "console";
+
 import { apiClient } from "../framework/api-manager";
 import logger from "../framework/logger.manager";
 import {
@@ -8,6 +8,8 @@ import {
   SpotDetail,
   Forecast,
 } from "./types";
+
+
 
 export const searchForPlace = async (
   query: string

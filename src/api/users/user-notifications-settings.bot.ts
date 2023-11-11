@@ -142,7 +142,7 @@ instance.onText(/\/hours/, async (msg: Message) => {
   );
 });
 
-instance.onText(/\/daystoforecast/, async (msg: Message) => {
+instance.onText(/\/daysforecast/, async (msg: Message) => {
   const chatId = msg.chat.id;
   const namePrompt = await instance.sendMessage(
     chatId,
