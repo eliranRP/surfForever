@@ -23,7 +23,7 @@
     "@types/agenda": "4.1.0",
     "agenda": "5.0.0",
     "axios": "1.6.1",
-    "dayjs": "1.11.7",
+    "dayjs": "1.11.10",
     "express": "4.18.2",
     "lodash": "4.17.21",
     "mongodb": "5.9.1",
