@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.0.1](https://github.com/eliranRP/surfForever/compare/v1.0.0...v1.0.1) (2023-11-11)
+
+
+### Bug Fixes
+
+* **deps:** update dependency axios to v1.6.1 ([5bf4521](https://github.com/eliranRP/surfForever/commit/5bf4521d6c248490e87a31deaf5cc7254c4e5d0b))
+* logs ([#13](https://github.com/eliranRP/surfForever/issues/13)) ([f2323cc](https://github.com/eliranRP/surfForever/commit/f2323cc951824622ff98d8da8c66c48db08b0379))
+
+
+### Miscellaneous
+
+* **deps:** update dependency @types/express to v4.17.20 ([450e39b](https://github.com/eliranRP/surfForever/commit/450e39b556714368bbe56ff9d713d096e72e95ec))
+* **deps:** update dependency @types/express to v4.17.21 ([778fb5a](https://github.com/eliranRP/surfForever/commit/778fb5a8ee1efe2fee3c3ccf4c884f9cf19a1113))
+* **deps:** update dependency @types/lodash to v4.14.200 ([27feb38](https://github.com/eliranRP/surfForever/commit/27feb38a14ccb8670f52dbd463d9f8ac4c62e0cc))
+* **deps:** update dependency @types/lodash to v4.14.201 ([8af920f](https://github.com/eliranRP/surfForever/commit/8af920f24a00343674a726e9fabf317e61119b39))
+* **deps:** update dependency @types/node-telegram-bot-api to v0.61.11 ([42b7117](https://github.com/eliranRP/surfForever/commit/42b7117f627e6c4353acaf0736abdca873df5075))
+* **deps:** update dependency npm to v9.9.1 ([c632ebb](https://github.com/eliranRP/surfForever/commit/c632ebba3243bf1995561e2b63e4913dabe35b2e))
+* **deps:** update dependency ts-jest to v29.1.1 ([347a9d0](https://github.com/eliranRP/surfForever/commit/347a9d048ba8c7f42fbf08bde1da7ad094e70115))
+* **deps:** update jest monorepo ([20d38fc](https://github.com/eliranRP/surfForever/commit/20d38fc59f39062c57abe94b5eb6606256b8aa85))
+
 ## 1.0.0 (2023-11-11)
 
 
