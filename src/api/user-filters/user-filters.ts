@@ -42,22 +42,22 @@ export const matchForecastsByUserPreferences = (
     logger.error("Invalid parameters", forecasts, userPreference);
     throw new Error("Invalid parameters");
   }
-  logger.debug("forecast: ", forecasts);
-  logger.debug("user preference: ", userPreference);
-  
+  logger.debug(`forecast: ${forecasts}`);
+  logger.debug(`user preference: ${userPreference}`);
+
   const waveMatches = forecasts.filter((forecast) =>
     matchByWaveHeight(userPreference.waveHeightRange, forecast)
   );
-  logger.debug("wave matches: ", waveMatches);
+  logger.debug(`wave matches: ${waveMatches.length}`);
 
   const ratingMatches = forecasts.filter((forecast) =>
     matchByRating(userPreference.rating, forecast)
   );
-  logger.debug("rating matches: ", ratingMatches);
+  logger.debug(`rating matches: ${ratingMatches.length}`);
   const matches = [...waveMatches, ...ratingMatches].filter((forecast) =>
     matchByDayHour(userPreference.preferredReminderHours, forecast)
   );
-  logger.debug("Total matches: ", matches);
+  logger.debug(`Total matches: ${matches.length}`);
   return matches;
 };
 
