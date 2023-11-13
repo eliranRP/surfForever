@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.0](https://github.com/eliranRP/surfForever/compare/v1.0.2...v1.1.0) (2023-11-13)
+
+
+### Features
+
+* Not seen ([021c3ea](https://github.com/eliranRP/surfForever/commit/021c3eae7b49b3484056f59e75843f5954701471))
+* turn off notification and seen forecast ([3150cb2](https://github.com/eliranRP/surfForever/commit/3150cb29f1bb940d9811a8966a39660f821b2b78))
+
 ## [1.0.2](https://github.com/eliranRP/surfForever/compare/v1.0.1...v1.0.2) (2023-11-11)
 
 
