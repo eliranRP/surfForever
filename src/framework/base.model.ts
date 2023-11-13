@@ -1,14 +1,19 @@
-import { Document, Model, FilterQuery, UpdateQuery } from 'mongoose';
+import { Document, Model, FilterQuery, UpdateQuery } from "mongoose";
 
-abstract class BaseCrudModel<T extends Document> {
+abstract class BaseCrudModel<T> {
   protected model: Model<T>;
 
   constructor(model: Model<T>) {
     this.model = model;
   }
 
-  async create(data: Partial<T>): Promise<T> {
+  async insert(data: Partial<T>): Promise<T> {
     const createdItem = await this.model.create(data);
+    return createdItem;
+  }
+
+  async insertMany(data: Partial<T[]>): Promise<T[]> {
+    const createdItem = await this.model.insertMany(data);
     return createdItem;
   }
 
@@ -18,8 +23,8 @@ abstract class BaseCrudModel<T extends Document> {
   }
 
   async findOne(filter: FilterQuery<T>): Promise<T | null> {
-    return await this.model.findOne<T>(filter).exec();
-
+    const items = await this.model.findOne<T>(filter).exec();
+    return items;
   }
 
   async findMany(filter: FilterQuery<T>): Promise<T[]> {
@@ -32,7 +37,10 @@ abstract class BaseCrudModel<T extends Document> {
     return updatedItem;
   }
 
-  async updateOne(filter: FilterQuery<T>, data: UpdateQuery<T>): Promise<T | null> {
+  async updateOne(
+    filter: FilterQuery<T>,
+    data: UpdateQuery<T>
+  ): Promise<T | null> {
     const updatedItem = await this.model.findOneAndUpdate(filter, data);
     return updatedItem;
   }
@@ -47,7 +55,11 @@ abstract class BaseCrudModel<T extends Document> {
   }
   async upsert(filter: FilterQuery<T>, data: Partial<T>): Promise<T> {
     const options = { upsert: true, new: true, setDefaultsOnInsert: true };
-    const upsertedItem = await this.model.findOneAndUpdate(filter, data, options);
+    const upsertedItem = await this.model.findOneAndUpdate(
+      filter,
+      data,
+      options
+    );
     return upsertedItem;
   }
 }

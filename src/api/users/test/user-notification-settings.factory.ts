@@ -30,4 +30,5 @@ export const UserNotificationSettingsFactory =
     daysToForecast: faker.datatype.number(7), // Generate a random number between 0 and 7
     preferredReminderHours: MORNING, // Generate a random number between 0 and 24
     chatId: faker.datatype.number(),
+    hasNotificationTurnedOn: faker.datatype.boolean(),
   }));
