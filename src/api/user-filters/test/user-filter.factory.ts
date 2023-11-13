@@ -1,11 +1,8 @@
 import { Factory } from "fishery";
-import {
-  Forecast,
-  WaveData,
-  WaveHeightResponse,
-} from "../../../surfline/types";
+import { Forecast, WaveData } from "../../../surfline/types";
 import { faker } from "@faker-js/faker";
 import { Rating } from "../../users/types";
+import { ISeenForecast } from "../seen-forecast.schema";
 
 export const ForecastFactory = Factory.define<Forecast>(() => ({
   timestamp: faker.date.future().getTime(),
@@ -40,4 +37,10 @@ export const WaveFactory = Factory.define<WaveData>(() => ({
     },
   },
   power: faker.datatype.float({ min: 700, max: 800, precision: 0.01 }),
+}));
+
+export const SeenForecastFactory = Factory.define<ISeenForecast>(() => ({
+  chatId: faker.datatype.number(),
+  spotId: faker.datatype.uuid(),
+  timestamp: faker.date.past().getTime(),
 }));

@@ -1,15 +1,30 @@
 import BaseCrudModel from "../../framework/base.model";
+import TelegramBotManager from "../../framework/bot-manager";
 import logger from "../../framework/logger.manager";
 import { spotDetails } from "../../surfline/api";
 import { searchSpotByName } from "../location/location.service";
 import { SpotLocation } from "../location/location.types";
-import { Hours, HoursKind, Rating, WaveTypeId } from "./types";
+import { MESSAGES_TYPE } from "../messages/message.type";
+import { checkMatchBetweenForecastAndUserSettings } from "../user-filters/user-filters";
+import {
+  Hours,
+  HoursKind,
+  NotificationKind,
+  Rating,
+  WaveTypeId,
+} from "./types";
 import UserNotificationSettings, {
+  IUserNotificationSettings,
   IUserNotificationSettingsSchema,
 } from "./user-notifications-settings.schema";
-import { findWaveConfigurationTypeById, getRatingByKey } from "./utils";
-
-class UserNotificationSettingsCrudModel extends BaseCrudModel<IUserNotificationSettingsSchema> {
+import {
+  findWaveConfigurationTypeById,
+  getNotificationResponseByKind,
+  getRatingByKey,
+  sendPreferredSpot,
+} from "./utils";
+import SeenForecastModel from "../user-filters/seen-forecast.model";
+class UserNotificationSettingsModel extends BaseCrudModel<IUserNotificationSettingsSchema> {
   constructor() {
     super(UserNotificationSettings);
   }
@@ -62,6 +77,40 @@ class UserNotificationSettingsCrudModel extends BaseCrudModel<IUserNotificationS
     if (!spot) throw new Error("Invalid location");
     return await this.upsert({ chatId }, { spot, chatId });
   }
+
+  async setPreferredNotification(
+    chatId: number,
+    notificationResponse: NotificationKind
+  ) {
+    const selectedNotification =
+      getNotificationResponseByKind(notificationResponse);
+    return await this.upsert(
+      { chatId },
+      { hasNotificationTurnedOn: selectedNotification.values, chatId }
+    );
+  }
+
+  async notifyUsers(usersSettings: IUserNotificationSettings[]) {
+    const instance = TelegramBotManager.getInstance();
+    return await Promise.all(
+      usersSettings.map(async (settings) => {
+        const matchForecasts = await checkMatchBetweenForecastAndUserSettings(
+          settings.chatId
+        );
+        if (matchForecasts.length > 0) {
+          logger.info(`has match!  settings: ${settings}`);
+          await SeenForecastModel.setSeenForecast(
+            matchForecasts,
+            settings.chatId,
+            settings.spot.spotId
+          );
+          await sendPreferredSpot(settings.chatId, settings.spot, instance);
+          await instance.sendMessage(settings.chatId, MESSAGES_TYPE.MATCH);
+        }
+        logger.info(`No match!  settings: ${settings} `);
+      })
+    );
+  }
 }
 
-export default new UserNotificationSettingsCrudModel();
+export default new UserNotificationSettingsModel();

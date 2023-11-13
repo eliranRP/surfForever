@@ -2,17 +2,24 @@ import dayjs from "dayjs";
 import { AFTERNOON, MORNING, Rating } from "../../users/types";
 import {
   checkMatchBetweenForecastAndUserSettings,
+  matchUnseenForecasts,
   matchByDayHour as matchByHourDay,
   matchByRating,
   matchByWaveHeight,
 } from "../user-filters";
-import { ForecastFactory, WaveFactory } from "./user-filter.factory";
+import {
+  ForecastFactory,
+  SeenForecastFactory,
+  WaveFactory,
+} from "./user-filter.factory";
 import { WaveHeightRange } from "../../users/user-notifications-settings.schema";
 import { RatingResponse, WaveHeightResponse } from "../../../surfline/types";
 import { getRatingByKey, getRatingByValue } from "../../users/utils";
 import * as api from "../../../surfline/api";
-import UserNotificationSettingsCrudModel from "../../users/user-notifications-settings.model";
+import UserNotificationSettingsModel from "../../users/user-notifications-settings.model";
 import { UserNotificationSettingsFactory } from "../../users/test/user-notification-settings.factory";
+import { normalizeTimestamp } from "../utils";
+import SeenForecastModel from "../seen-forecast.model";
 
 describe("user filter", () => {
   describe("match by hour day", () => {
@@ -146,7 +153,7 @@ describe("user filter", () => {
         rating: getRatingByValue(Rating.GOOD),
         preferredReminderHours: MORNING,
       });
-      await UserNotificationSettingsCrudModel.create(userNotificationSettings);
+      await UserNotificationSettingsModel.insert(userNotificationSettings);
 
       // Act
       const result = await checkMatchBetweenForecastAndUserSettings(chatId);
@@ -196,7 +203,7 @@ describe("user filter", () => {
         rating: getRatingByValue(Rating.GOOD),
         preferredReminderHours: MORNING,
       });
-      await UserNotificationSettingsCrudModel.create(userNotificationSettings);
+      await UserNotificationSettingsModel.insert(userNotificationSettings);
 
       // Act
       const result = await checkMatchBetweenForecastAndUserSettings(chatId);
@@ -246,13 +253,13 @@ describe("user filter", () => {
         rating: getRatingByValue(Rating.GOOD),
         preferredReminderHours: MORNING,
       });
-      await UserNotificationSettingsCrudModel.create(userNotificationSettings);
+      await UserNotificationSettingsModel.insert(userNotificationSettings);
 
       // Act
       const result = await checkMatchBetweenForecastAndUserSettings(chatId);
 
       // Assert
-      expect(result).toBeFalsy();
+      expect(result.length).toBe(0);
     });
 
     test("should not find a match", async () => {
@@ -312,13 +319,132 @@ describe("user filter", () => {
         },
         preferredReminderHours: MORNING,
       });
-      await UserNotificationSettingsCrudModel.create(userNotificationSettings);
+      await UserNotificationSettingsModel.insert(userNotificationSettings);
 
       // Act
       const result = await checkMatchBetweenForecastAndUserSettings(chatId);
 
       // Assert
-      expect(result).toBeFalsy();
+      expect(result.length).toBe(0);
+    });
+  });
+
+  describe("normalizeTimestamp", () => {
+    test("should normalize timestamp - return the same date if it is in the same day", () => {
+      //Arrange
+      const date1 = dayjs("2023-11-08T09:00:00").unix();
+      const date2 = dayjs("2023-11-08T12:00:00").unix();
+
+      // Act
+      const normalizeDate1 = normalizeTimestamp(date1);
+      const normalizeDate2 = normalizeTimestamp(date2);
+
+      //Assert
+      expect(normalizeDate1).toEqual(dayjs("2023-11-08T00:00:00").unix());
+      expect(normalizeDate2).toEqual(dayjs("2023-11-08T00:00:00").unix());
+    });
+  });
+
+  describe("Unseen forecasts", () => {
+    test("Should return that there are no unseen forecasts", async () => {
+      //Arrange
+      const chatId = 1;
+      const spotId = "test";
+      const timestamp1 = normalizeTimestamp(
+        dayjs("2023-11-08T09:00:00").unix()
+      );
+      const timestamp2 = normalizeTimestamp(
+        dayjs("2023-12-08T09:00:00").unix()
+      );
+      const seenForecast1 = SeenForecastFactory.build({
+        chatId,
+        spotId,
+        timestamp: timestamp1,
+      });
+
+      const seenForecast2 = SeenForecastFactory.build({
+        chatId,
+        spotId,
+        timestamp: timestamp2,
+      });
+      const seenForecasts = [seenForecast1, seenForecast2];
+
+      await SeenForecastModel.insertMany(seenForecasts);
+
+      const forecast1 = ForecastFactory.build({ timestamp: timestamp1 });
+      const forecast2 = ForecastFactory.build({ timestamp: timestamp2 });
+      const forecasts = [forecast1, forecast2];
+      //Act
+      const matches = await matchUnseenForecasts(forecasts, chatId, spotId);
+
+      //Assert
+      expect(matches.length).toBe(0);
+    });
+    test("Should return that there are no seen forecasts", async () => {
+      //Arrange
+      const chatId = 1;
+      const spotId = "test";
+      const timestamp1 = dayjs("2023-11-08T09:00:00").unix();
+      const timestamp2 = dayjs("2023-12-08T09:00:00").unix();
+      const seenForecast1 = SeenForecastFactory.build({
+        chatId,
+        spotId,
+        timestamp: timestamp1,
+      });
+
+      const seenForecast2 = SeenForecastFactory.build({
+        chatId,
+        spotId,
+        timestamp: timestamp2,
+      });
+      const seenForecasts = [seenForecast1, seenForecast2];
+
+      await SeenForecastModel.insertMany(seenForecasts);
+
+      const forecast1 = ForecastFactory.build({
+        timestamp: dayjs(timestamp1).add(5, "hours").unix(),
+      });
+      const forecast2 = ForecastFactory.build({
+        timestamp: dayjs(timestamp2).add(5, "hours").unix(),
+      });
+      const forecasts = [forecast1, forecast2];
+      //Act
+      const matches = await matchUnseenForecasts(forecasts, chatId, spotId);
+
+      //Assert
+      expect(matches.length).toBe(2);
+    });
+  });
+
+  describe("Unseen forecasts", () => {
+    test("When upsert unseen forecast with the same chatId, timestamp and spotId should update and not insert a new item", async () => {
+      //Arrange
+      const forecastTimestamp = dayjs("2023-11-08T09:00:00").unix();
+      const forecasts = ForecastFactory.buildList(2, {
+        timestamp: forecastTimestamp,
+        wave: {
+          min: 1,
+          max: 2,
+        },
+        rating: {
+          key: getRatingByKey("FAIR").key,
+          value: getRatingByValue(Rating.FAIR).value,
+        },
+      });
+
+      const chatId = 1;
+      const userNotificationSettings = UserNotificationSettingsFactory.build({
+        chatId: 1,
+      });
+
+      await SeenForecastModel.setSeenForecast(
+        forecasts,
+        chatId,
+        userNotificationSettings.spot.spotId
+      );
+
+      const seenForecast = await SeenForecastModel.findMany({});
+      expect(seenForecast.length).toBe(1);
     });
   });
 });

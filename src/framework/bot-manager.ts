@@ -1,7 +1,5 @@
 import TelegramBot from 'node-telegram-bot-api';
 
-const token = process.env.API_KEY;
-
 
 class TelegramBotManager {
     private static instance: TelegramBot;
@@ -11,7 +9,7 @@ class TelegramBotManager {
 
     }
 
-    public static getInstance(): TelegramBot {
+    public static getInstance(token:string = process.env.API_KEY): TelegramBot {
         if (!TelegramBotManager.instance) {
             TelegramBotManager.instance = new TelegramBot(token, { polling: true });
         }

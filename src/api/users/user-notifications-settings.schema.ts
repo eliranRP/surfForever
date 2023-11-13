@@ -22,6 +22,7 @@ export interface IUserNotificationSettings {
   daysToForecast: number;
   preferredReminderHours: number[];
   rating: RatingSchema;
+  hasNotificationTurnedOn: boolean;
 }
 
 export type IUserNotificationSettingsSchema = IUserNotificationSettings &
@@ -51,6 +52,10 @@ const UserNotificationSettingsSchema =
       daysToForecast: { type: Number, default: 2 },
       preferredReminderHours: { type: [Number], default: MORNING },
       chatId: { type: Number },
+      hasNotificationTurnedOn: {
+        type: Boolean,
+        default: true,
+      },
     },
     { timestamps: true }
   );

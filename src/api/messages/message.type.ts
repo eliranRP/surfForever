@@ -33,6 +33,8 @@ export const MESSAGES_TYPE = {
   MATCH: `⭐⭐⭐⭐⭐ Hooray! We found a match, so get ready to hit the waves! 🏄‍♀️🏄‍♀️🏄‍♀️ Follow the link to view the full forecast.`,
   NO_SETTINGS:
     "It appears that you haven't configured any settings yet. Utilize the command /help to explore the options available to you.",
+  NOTIFICATIONS_EMOJI:
+    "Great! Your preferences have been successfully updated!",
 };
 
 export const getHourMessage = (option: HourType) => {

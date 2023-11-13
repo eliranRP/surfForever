@@ -1,6 +1,6 @@
 import { InlineKeyboardMarkup, Message } from "node-telegram-bot-api";
 import TelegramBotManager from "../../framework/bot-manager";
-import UserNotificationSettingsCrudModel from "./user-notifications-settings.model";
+import UserNotificationSettingsModel from "./user-notifications-settings.model";
 import { searchSpotByName } from "../location/location.service";
 import logger from "../../framework/logger.manager";
 import {
@@ -12,6 +12,8 @@ import {
   Hours,
   HoursResponseButton,
   RatingKind,
+  NotificationOptions,
+  NotificationResponseButton,
 } from "./types";
 import { chooseSpotMessage, sendPreferredSpot } from "./utils";
 import {
@@ -37,7 +39,7 @@ instance.onText(/\/help/, async (msg: Message) => {
 
 instance.onText(/\/settings/, async (msg: Message) => {
   const chatId = msg.chat.id;
-  const settings = await UserNotificationSettingsCrudModel.findOne({ chatId });
+  const settings = await UserNotificationSettingsModel.findOne({ chatId });
   if (settings) {
     return await instance.sendMessage(
       chatId,
@@ -142,6 +144,30 @@ instance.onText(/\/hours/, async (msg: Message) => {
   );
 });
 
+instance.onText(/\/notifications/, async (msg: Message) => {
+  const chatId = msg.chat.id;
+  const options = NotificationOptions.map((option) => {
+    return {
+      text: `${option.display} ${option.emoji}`,
+      callback_data: JSON.stringify({
+        type: ChatAction.SET_NOTIFICATION_TURNED_ON,
+        data: option.key,
+      }),
+    };
+  });
+
+  // Create the inline keyboard markup
+  const replyMarkup: InlineKeyboardMarkup = {
+    inline_keyboard: chunkArray(options, 1),
+  };
+
+  await instance.sendMessage(
+    chatId,
+    "Please turn On / Off notifications:",
+    { reply_markup: replyMarkup }
+  );
+});
+
 instance.onText(/\/daysforecast/, async (msg: Message) => {
   const chatId = msg.chat.id;
   const namePrompt = await instance.sendMessage(
@@ -157,7 +183,7 @@ instance.onText(/\/daysforecast/, async (msg: Message) => {
     try {
       const input = Number(nameMsg.text);
       if (typeof input === "number" && input >= 1 && input <= 5) {
-        await UserNotificationSettingsCrudModel.upsert(
+        await UserNotificationSettingsModel.upsert(
           { chatId },
           { daysToForecast: input }
         );
@@ -182,7 +208,7 @@ instance.onText(/\/daysforecast/, async (msg: Message) => {
 
 instance.onText(/\/favorite/, async (msg: Message) => {
   const chatId = msg.chat.id;
-  const settings = await UserNotificationSettingsCrudModel.findOne({ chatId });
+  const settings = await UserNotificationSettingsModel.findOne({ chatId });
   if (settings?.spot) {
     await sendPreferredSpot(chatId, settings.spot, instance);
     return;
@@ -201,7 +227,7 @@ instance.on("callback_query", async (query) => {
     switch (data.type) {
       case ChatAction.SET_RATING:
         const ratingKey = (data as RatingResponseButton).data;
-        await UserNotificationSettingsCrudModel.setPreferredRating(
+        await UserNotificationSettingsModel.setPreferredRating(
           chatId,
           ratingKey
         );
@@ -209,24 +235,26 @@ instance.on("callback_query", async (query) => {
         break;
       case ChatAction.SET_WAVE_HEIGHT:
         const waveKey = (data as WaveHeightResponseButton).data;
-        await UserNotificationSettingsCrudModel.setPreferredWavHeight(
+        await UserNotificationSettingsModel.setPreferredWavHeight(
           chatId,
           waveKey
         );
         await instance.sendMessage(chatId, `${MESSAGES_TYPE.WAVE_EMOJI}`);
         break;
-      case ChatAction.SET_DAYS_TO_FORECAST:
+      case ChatAction.SET_NOTIFICATION_TURNED_ON:
+        const notificationResponse = (data as NotificationResponseButton).data;
+        await UserNotificationSettingsModel.setPreferredNotification(chatId, notificationResponse);
+        await instance.sendMessage(chatId, `${MESSAGES_TYPE.NOTIFICATIONS_EMOJI}`);
+        
+      break;
       case ChatAction.SET_PREFERRED_HOURS:
         const hoursKey = (data as HoursResponseButton).data;
-        await UserNotificationSettingsCrudModel.setPreferredHours(
-          chatId,
-          hoursKey
-        );
+        await UserNotificationSettingsModel.setPreferredHours(chatId, hoursKey);
         await instance.sendMessage(chatId, `${MESSAGES_TYPE.HOURS_EMOJI}`);
         break;
       case ChatAction.CHOOSE_SURFING_LOCATION:
         logger.info(JSON.stringify(data as SurfingLocationResponseButton));
-        await UserNotificationSettingsCrudModel.setPreferredLocation(
+        await UserNotificationSettingsModel.setPreferredLocation(
           chatId,
           data.id
         );

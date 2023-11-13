@@ -9,6 +9,11 @@ export interface HoursResponseButton {
   data: HoursKind;
 }
 
+export interface NotificationResponseButton {
+  type: ChatAction;
+  data: NotificationKind;
+}
+
 export interface RatingResponseButton {
   type: ChatAction;
   data: keyof typeof Rating;
@@ -25,6 +30,7 @@ export enum ChatAction {
   SET_LOCATION,
   SET_DAYS_TO_FORECAST,
   SET_PREFERRED_HOURS,
+  SET_NOTIFICATION_TURNED_ON,
   CHOOSE_SURFING_LOCATION,
 }
 
@@ -45,6 +51,16 @@ export interface HourType {
   display: string;
   emoji: string;
 }
+
+export enum NotificationKind {
+  YES,
+  NO,
+}
+
+export const NotificationOptions = [
+  { values: true, key: NotificationKind.YES, display: "Yes", emoji: "✅" },
+  { values: false, key: NotificationKind.NO, display: "No", emoji: "❌" },
+];
 
 export const Hours: HourType[] = [
   { values: MORNING, key: HoursKind.Morning, display: "Morning", emoji: "🌞" },

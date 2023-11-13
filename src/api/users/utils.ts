@@ -3,6 +3,8 @@ import { SpotLocation } from "../location/location.types";
 import {
   ChatAction,
   Hours,
+  NotificationKind,
+  NotificationOptions,
   Rating,
   RatingKind,
   WaveConfiguration,
@@ -80,4 +82,10 @@ export const getHourByKind = (option: number[]) => {
   if (match.length > 0) {
     return match[0];
   }
+};
+
+export const getNotificationResponseByKind = (kind: NotificationKind) => {
+  const result = NotificationOptions.find((item) => item.key === kind);
+  if (!result) throw new Error("Invalid notification kind");
+  return result;
 };
