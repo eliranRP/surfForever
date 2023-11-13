@@ -339,5 +339,6 @@ describe("User Notification Settings", () => {
       const seenForecast = await SeenForecastModel.findMany({});
       expect(seenForecast.length).toBe(1);
     });
+
   });
 });

@@ -2,7 +2,6 @@ import Agenda from "agenda";
 import logger from "../framework/logger.manager";
 import UserNotificationSettingsModel from "../api/users/user-notifications-settings.model";
 
-
 const connection = process.env.MONGODB_URL || "mongodb://127.0.0.1/surfforever";
 export const agenda = new Agenda({
   db: { address: connection, collection: "schedulers" },
@@ -22,7 +21,9 @@ export const scheduleNotifier = async () => {
 
 agenda.define(SCHEDULE_NOTIFIER, async () => {
   logger.info("running scheduleNotifier");
-  const usersSettings = await UserNotificationSettingsModel.findMany({});
+  const usersSettings = await UserNotificationSettingsModel.findMany({
+    hasNotificationTurnedOn: true,
+  });
   logger.info(`notifier run on ${usersSettings.length} users`);
   await UserNotificationSettingsModel.notifyUsers(usersSettings);
   logger.info("finish running scheduleNotifier");

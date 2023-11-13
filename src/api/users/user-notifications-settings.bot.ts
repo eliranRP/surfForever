@@ -144,7 +144,7 @@ instance.onText(/\/hours/, async (msg: Message) => {
   );
 });
 
-instance.onText(/\/notificationS/, async (msg: Message) => {
+instance.onText(/\/notifications/, async (msg: Message) => {
   const chatId = msg.chat.id;
   const options = NotificationOptions.map((option) => {
     return {
@@ -163,7 +163,7 @@ instance.onText(/\/notificationS/, async (msg: Message) => {
 
   await instance.sendMessage(
     chatId,
-    "Please select preferred hours to be notified on:",
+    "Please turn On / Off notifications:",
     { reply_markup: replyMarkup }
   );
 });
@@ -244,7 +244,7 @@ instance.on("callback_query", async (query) => {
       case ChatAction.SET_NOTIFICATION_TURNED_ON:
         const notificationResponse = (data as NotificationResponseButton).data;
         await UserNotificationSettingsModel.setPreferredNotification(chatId, notificationResponse);
-        await instance.sendMessage(chatId, `${MESSAGES_TYPE.HOURS_EMOJI}`);
+        await instance.sendMessage(chatId, `${MESSAGES_TYPE.NOTIFICATIONS_EMOJI}`);
         
       break;
       case ChatAction.SET_PREFERRED_HOURS:
