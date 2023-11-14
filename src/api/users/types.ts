@@ -58,8 +58,8 @@ export enum NotificationKind {
 }
 
 export const NotificationOptions = [
-  { values: true, key: NotificationKind.YES, display: "Yes", emoji: "✅" },
-  { values: false, key: NotificationKind.NO, display: "No", emoji: "❌" },
+  { values: true, key: NotificationKind.YES, display: "On", emoji: "✅" },
+  { values: false, key: NotificationKind.NO, display: "Off", emoji: "❌" },
 ];
 
 export const Hours: HourType[] = [
