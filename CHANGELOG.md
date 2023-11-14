@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/eliranRP/surfForever/compare/v1.1.0...v1.1.1) (2023-11-14)
+
+
+### Bug Fixes
+
+* add response message to location ([851d869](https://github.com/eliranRP/surfForever/commit/851d869855d145f09326511b919f4e15e999ee00))
+
 ## [1.1.0](https://github.com/eliranRP/surfForever/compare/v1.0.2...v1.1.0) (2023-11-13)
 
 
