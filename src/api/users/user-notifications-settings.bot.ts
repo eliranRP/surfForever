@@ -15,7 +15,11 @@ import {
   NotificationOptions,
   NotificationResponseButton,
 } from "./types";
-import { chooseSpotMessage, sendPreferredSpot } from "./utils";
+import {
+  chooseSpotMessage,
+  sanitizeLocationArea,
+  sendPreferredSpot,
+} from "./utils";
 import {
   MESSAGES_TYPE,
   getPreferredSettingMessage,
@@ -52,21 +56,71 @@ instance.onText(/\/settings/, async (msg: Message) => {
 
   return await instance.sendMessage(chatId, MESSAGES_TYPE.NO_SETTINGS);
 });
+instance.onText(/\/daysforecast/, async (msg: Message) => {
+  const chatId = msg.chat.id;
+  const message = await instance.sendMessage(
+    chatId,
+    "Select the number of days in advance you'd like to forecast, with an option to look up to 5 days ahead ⏰⏰⏰",
+    {
+      reply_markup: {
+        force_reply: true,
+      },
+    }
+  );
+  instance.onReplyToMessage(chatId, message.message_id, async (nameMsg) => {
+    try {
+      const input = Number(nameMsg.text);
+      if (typeof input === "number" && input >= 1 && input <= 5) {
+        await UserNotificationSettingsModel.upsert(
+          { chatId },
+          { daysToForecast: input }
+        );
+        await instance.sendMessage(
+          chatId,
+          `We are currently forecasting up to ${input} days ahead.`
+        );
+      } else {
+        await instance.sendMessage(
+          chatId,
+          `Something wrong with your input, please type a number between 1-5`
+        );
+      }
+    } catch (error) {
+      await instance.sendMessage(
+        chatId,
+        `Something wrong with your input, please type a number between 1-5`
+      );
+    }
+  });
+});
 
 instance.onText(/\/location/, async (msg: Message) => {
   const chatId = msg.chat.id;
-  try {
-    const query = msg.text.replace(/\/location/, "").trim();
-    const locationSuggestions = await searchSpotByName(query);
-    await Promise.all(
-      locationSuggestions.map(async (location) =>
-        chooseSpotMessage(chatId, location, instance)
-      )
-    );
-  } catch (error) {
-    await instance.sendMessage(chatId, error.message);
-    logger.error(error);
-  }
+  const message = await instance.sendMessage(
+    chatId,
+    "Type location spot name. Example: Maaravi",
+    {
+      reply_markup: {
+        force_reply: true,
+        input_field_placeholder: "Spot name",
+      },
+    }
+  );
+
+  instance.onReplyToMessage(chatId, message.message_id, async (nameMsg) => {
+    try {
+      const query = nameMsg.text;
+      const locationName = sanitizeLocationArea(query);
+      if (!locationName) throw new Error("Invalid location name");
+      const locationSuggestions = await searchSpotByName(locationName);
+      for (const location of locationSuggestions) {
+        await chooseSpotMessage(chatId, location, instance);
+      }
+    } catch (error) {
+      await instance.sendMessage(chatId, error.message);
+      logger.error(error);
+    }
+  });
 });
 
 instance.onText(/\/rating/, async (msg: Message) => {
@@ -161,48 +215,8 @@ instance.onText(/\/notifications/, async (msg: Message) => {
     inline_keyboard: chunkArray(options, 1),
   };
 
-  await instance.sendMessage(
-    chatId,
-    "Please turn On / Off notifications:",
-    { reply_markup: replyMarkup }
-  );
-});
-
-instance.onText(/\/daysforecast/, async (msg: Message) => {
-  const chatId = msg.chat.id;
-  const namePrompt = await instance.sendMessage(
-    chatId,
-    "Select the number of days in advance you'd like to forecast, with an option to look up to 5 days ahead ⏰⏰⏰",
-    {
-      reply_markup: {
-        force_reply: true,
-      },
-    }
-  );
-  instance.onReplyToMessage(chatId, namePrompt.message_id, async (nameMsg) => {
-    try {
-      const input = Number(nameMsg.text);
-      if (typeof input === "number" && input >= 1 && input <= 5) {
-        await UserNotificationSettingsModel.upsert(
-          { chatId },
-          { daysToForecast: input }
-        );
-        await instance.sendMessage(
-          chatId,
-          `We are currently forecasting up to ${input} days ahead.`
-        );
-      } else {
-        await instance.sendMessage(
-          chatId,
-          `Something wrong with your input, please type a number between 1-5`
-        );
-      }
-    } catch (error) {
-      await instance.sendMessage(
-        chatId,
-        `Something wrong with your input, please type a number between 1-5`
-      );
-    }
+  await instance.sendMessage(chatId, "Please turn On / Off notifications:", {
+    reply_markup: replyMarkup,
   });
 });
 
@@ -243,10 +257,16 @@ instance.on("callback_query", async (query) => {
         break;
       case ChatAction.SET_NOTIFICATION_TURNED_ON:
         const notificationResponse = (data as NotificationResponseButton).data;
-        await UserNotificationSettingsModel.setPreferredNotification(chatId, notificationResponse);
-        await instance.sendMessage(chatId, `${MESSAGES_TYPE.NOTIFICATIONS_EMOJI}`);
-        
-      break;
+        await UserNotificationSettingsModel.setPreferredNotification(
+          chatId,
+          notificationResponse
+        );
+        await instance.sendMessage(
+          chatId,
+          `${MESSAGES_TYPE.NOTIFICATIONS_EMOJI}`
+        );
+
+        break;
       case ChatAction.SET_PREFERRED_HOURS:
         const hoursKey = (data as HoursResponseButton).data;
         await UserNotificationSettingsModel.setPreferredHours(chatId, hoursKey);

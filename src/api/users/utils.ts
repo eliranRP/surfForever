@@ -11,6 +11,8 @@ import {
   WaveTypeId,
 } from "./types";
 import { RatingSchema } from "./user-notifications-settings.schema";
+// import string from "string-sanitizer";
+var string = require("string-sanitizer");
 
 export const createLocationMessage = (location: SpotLocation) => {
   const message = `
@@ -36,12 +38,12 @@ export const chooseSpotMessage = async (
   location: SpotLocation,
   instance: TelegramBot
 ) => {
+  const markupMessage = createLocationMessage(location);
   await instance.sendLocation(
     chatId,
     location.point.coordinates[1],
     location.point.coordinates[0]
   );
-  const markupMessage = createLocationMessage(location);
   await instance.sendMessage(chatId, markupMessage.message, {
     reply_markup: markupMessage.replyMarkup,
   });
@@ -88,4 +90,8 @@ export const getNotificationResponseByKind = (kind: NotificationKind) => {
   const result = NotificationOptions.find((item) => item.key === kind);
   if (!result) throw new Error("Invalid notification kind");
   return result;
+};
+
+export const sanitizeLocationArea = (location: string) => {
+  return string.sanitize.keepUnicode(location);
 };

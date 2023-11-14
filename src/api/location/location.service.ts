@@ -5,9 +5,10 @@ import { SpotLocation } from "./location.types";
 export const searchSpotByName = async (
   locationName: string
 ): Promise<SpotLocation[]> => {
+  logger.debug(`searchSpotByName locationName: ${locationName}`);
   const locationResult = await searchForPlace(locationName);
   if (locationResult.length == 0) {
-    logger.error(`Location not found  location: ${locationName}` );
+    logger.error(`Location not found  location: ${locationName}`);
     throw new Error("Location not found");
   }
 
@@ -15,7 +16,9 @@ export const searchSpotByName = async (
     (hit) => hit._type === "spot"
   );
   if (spots.length == 0) {
-    logger.error(`Location not found  location: ${locationName} location result: ${locationResult}` );
+    logger.error(
+      `Location not found  location: ${locationName} location result: ${locationResult}`
+    );
     throw new Error("Location not found");
   }
   return spots
