@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.2](https://github.com/eliranRP/surfForever/compare/v1.1.1...v1.1.2) (2023-11-17)
+
+
+### Bug Fixes
+
+* user preference ([2ea6d97](https://github.com/eliranRP/surfForever/commit/2ea6d9700885a3e8e3cf7bd37c1b57962edb076e))
+
 ## [1.1.1](https://github.com/eliranRP/surfForever/compare/v1.1.0...v1.1.1) (2023-11-14)
 
 
