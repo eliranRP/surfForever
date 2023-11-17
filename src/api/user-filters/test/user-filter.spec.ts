@@ -111,6 +111,38 @@ describe("user filter", () => {
   });
 
   describe("user preferred settings check match forecasts", () => {
+    test("When user settings is not set should not find a match", async () => {
+      // Arrange
+      const chatId = 2;
+
+      // Act
+      const result = await checkMatchBetweenForecastAndUserSettings(chatId);
+
+      // Assert
+      expect(result.length).toBe(0);
+    });
+
+    test("When user does not selected a spot should not find a match", async () => {
+      // Arrange
+      const chatId = 2;
+      const userNotificationSettings = UserNotificationSettingsFactory.build({
+        chatId,
+        spot: null,
+        waveHeightRange: {
+          min: 0.6,
+          max: 1,
+        },
+        rating: getRatingByValue(Rating.GOOD),
+        preferredReminderHours: MORNING,
+      });
+      await UserNotificationSettingsModel.insert(userNotificationSettings);
+
+      // Act
+      const result = await checkMatchBetweenForecastAndUserSettings(chatId);
+
+      // Assert
+      expect(result.length).toBe(0);
+    });
     test("should find a match by rating", async () => {
       // Arrange
       const forecastTimestampDay = dayjs("2023-11-08T09:00:00").unix();

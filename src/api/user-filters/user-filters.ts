@@ -102,6 +102,14 @@ export const checkMatchBetweenForecastAndUserSettings = async (
   const userPreferredSettings = await UserNotificationSettingsModel.findOne({
     chatId,
   });
+  if (userPreferredSettings === null) {
+    logger.error(`User with chatId ${chatId} can not be notify. no preference set`);
+    return [];
+  }
+  if(userPreferredSettings.spot === null || userPreferredSettings.spot.spotId === null) {
+    logger.error(`User with chatId ${chatId} can not be notify. no spot set`);
+    return [];
+  }
   const forecast = await getForecast(userPreferredSettings.spot.spotId);
   const matches = await matchForecastsByUserPreferences(
     userPreferredSettings,
