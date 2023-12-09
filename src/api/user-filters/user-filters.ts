@@ -2,32 +2,23 @@ import {
   IUserNotificationSettingsSchema,
   RatingSchema,
   WaveHeightRange,
-} from "../users/user-notifications-settings.schema";
-import { Forecast } from "../../surfline/types";
-import dayjs from "dayjs";
-import UserNotificationSettingsModel from "../users/user-notifications-settings.model";
-import { getForecast } from "../../surfline/api";
-import logger from "../../framework/logger.manager";
-import seenForecastModel from "./seen-forecast.model";
-import { normalizeTimestamp } from "./utils";
+} from '../users/user-notifications-settings.schema';
+import { Forecast } from '../../surfline/types';
+import dayjs from 'dayjs';
+import UserNotificationSettingsModel from '../users/user-notifications-settings.model';
+import { getForecast } from '../../surfline/api';
+import logger from '../../framework/logger.manager';
+import seenForecastModel from './seen-forecast.model';
+import { normalizeTimestamp } from './utils';
 
-export const matchByRating = (
-  preferredRating: RatingSchema,
-  forecast: Forecast
-): boolean => {
+export const matchByRating = (preferredRating: RatingSchema, forecast: Forecast): boolean => {
   return forecast.rating.value >= preferredRating.value;
 };
-export const matchByWaveHeight = (
-  preferredWave: WaveHeightRange,
-  forecast: Forecast
-): boolean => {
+export const matchByWaveHeight = (preferredWave: WaveHeightRange, forecast: Forecast): boolean => {
   return forecast.wave.max >= preferredWave.min;
 };
 
-export const matchByDayHour = (
-  preferredHours: number[],
-  forecast: Forecast
-): boolean => {
+export const matchByDayHour = (preferredHours: number[], forecast: Forecast): boolean => {
   const date = dayjs.unix(forecast.timestamp);
   const hour = date.hour();
   const lateHour = Math.max(...preferredHours);
@@ -38,7 +29,7 @@ export const matchByDayHour = (
 export const matchUnseenForecasts = async (
   forecasts: Forecast[],
   chatId: number,
-  spotId: string
+  spotId: string,
 ) => {
   const enrichForecasts = await Promise.all(
     forecasts.map(async (forecast) => {
@@ -51,20 +42,18 @@ export const matchUnseenForecasts = async (
         ...forecast,
         unseen: hasSeen === null,
       };
-    })
+    }),
   );
   return enrichForecasts.filter((forecast) => forecast.unseen);
 };
 
 export const matchForecastsByUserPreferences = async (
   userPreference: IUserNotificationSettingsSchema,
-  forecasts: Forecast[]
+  forecasts: Forecast[],
 ) => {
   if (!forecasts || !userPreference) {
-    logger.error(
-      `Invalid parameters forecasts: ${forecasts}, userPreference: ${userPreference}`
-    );
-    throw new Error("Invalid parameters");
+    logger.error(`Invalid parameters forecasts: ${forecasts}, userPreference: ${userPreference}`);
+    throw new Error('Invalid parameters');
   }
   logger.debug(`forecast: ${forecasts}`);
   logger.debug(`user preference: ${userPreference}`);
@@ -72,32 +61,30 @@ export const matchForecastsByUserPreferences = async (
   const unseenForecast = await matchUnseenForecasts(
     forecasts,
     userPreference.chatId,
-    userPreference.spot.spotId
+    userPreference.spot.spotId,
   );
   logger.debug(`unseen forecast: ${unseenForecast.length}`);
 
   const waveMatches = unseenForecast.filter((forecast) =>
-    matchByWaveHeight(userPreference.waveHeightRange, forecast)
+    matchByWaveHeight(userPreference.waveHeightRange, forecast),
   );
   logger.debug(`wave matches: ${waveMatches.length}`);
 
   const ratingMatches = unseenForecast.filter((forecast) =>
-    matchByRating(userPreference.rating, forecast)
+    matchByRating(userPreference.rating, forecast),
   );
   logger.debug(`rating matches: ${ratingMatches.length}`);
   const matches = [...waveMatches, ...ratingMatches].filter((forecast) =>
-    matchByDayHour(userPreference.preferredReminderHours, forecast)
+    matchByDayHour(userPreference.preferredReminderHours, forecast),
   );
   logger.debug(`Total matches: ${matches.length}`);
 
-  const uniqueMatches = [
-    ...new Map(matches.map((item) => [item["timestamp"], item])).values(),
-  ];
+  const uniqueMatches = [...new Map(matches.map((item) => [item['timestamp'], item])).values()];
   return uniqueMatches;
 };
 
 export const checkMatchBetweenForecastAndUserSettings = async (
-  chatId: number
+  chatId: number,
 ): Promise<Forecast[]> => {
   const userPreferredSettings = await UserNotificationSettingsModel.findOne({
     chatId,
@@ -106,14 +93,11 @@ export const checkMatchBetweenForecastAndUserSettings = async (
     logger.error(`User with chatId ${chatId} can not be notify. no preference set`);
     return [];
   }
-  if(userPreferredSettings.spot === null || userPreferredSettings.spot.spotId === null) {
+  if (userPreferredSettings.spot === null || userPreferredSettings.spot.spotId === null) {
     logger.error(`User with chatId ${chatId} can not be notify. no spot set`);
     return [];
   }
   const forecast = await getForecast(userPreferredSettings.spot.spotId);
-  const matches = await matchForecastsByUserPreferences(
-    userPreferredSettings,
-    forecast
-  );
+  const matches = await matchForecastsByUserPreferences(userPreferredSettings, forecast);
   return matches;
 };

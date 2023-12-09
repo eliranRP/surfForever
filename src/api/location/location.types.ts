@@ -1,4 +1,4 @@
-import { GeoPoint } from "./point.schema";
+import { GeoPoint } from './point.schema';
 export interface SpotLocation {
   spotId: string;
   name: string;
