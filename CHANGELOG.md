@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.1](https://github.com/eliranRP/surfForever/compare/v1.3.0...v1.3.1) (2023-12-09)
+
+
+### Bug Fixes
+
+* **deps:** update dependency mongodb to v6 ([#35](https://github.com/eliranRP/surfForever/issues/35)) ([c1e7cb6](https://github.com/eliranRP/surfForever/commit/c1e7cb687305bdf81d63b981a5455fb788e9e00b))
+
 ## [1.3.0](https://github.com/eliranRP/surfForever/compare/v1.2.0...v1.3.0) (2023-12-09)
 
 
