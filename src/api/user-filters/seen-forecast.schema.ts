@@ -1,4 +1,4 @@
-import { Schema, Document, model } from "mongoose";
+import { Schema, Document, model } from 'mongoose';
 
 export interface ISeenForecast {
   chatId: number;
@@ -14,7 +14,7 @@ const SeenForecastSchema = new Schema<ISeenForecastSchema>(
     spotId: { type: String },
     timestamp: { type: Number },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 SeenForecastSchema.methods.toJSON = function () {
@@ -26,9 +26,6 @@ SeenForecastSchema.methods.toJSON = function () {
   return obj;
 };
 
-const SeenForecast = model<ISeenForecastSchema>(
-  "seenForecast",
-  SeenForecastSchema
-);
+const SeenForecast = model<ISeenForecastSchema>('seenForecast', SeenForecastSchema);
 
 export default SeenForecast;

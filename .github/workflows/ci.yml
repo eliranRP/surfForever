@@ -46,7 +46,7 @@ jobs:
         id: njsscan
         uses: ajinabraham/njsscan-action@master
         with:
-          args: "."
+          args: '.'
 
   gitleaks:
     runs-on: macos-latest

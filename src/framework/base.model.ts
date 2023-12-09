@@ -1,4 +1,4 @@
-import { Document, Model, FilterQuery, UpdateQuery } from "mongoose";
+import { Model, FilterQuery, UpdateQuery } from 'mongoose';
 
 abstract class BaseCrudModel<T> {
   protected model: Model<T>;
@@ -37,10 +37,7 @@ abstract class BaseCrudModel<T> {
     return updatedItem;
   }
 
-  async updateOne(
-    filter: FilterQuery<T>,
-    data: UpdateQuery<T>
-  ): Promise<T | null> {
+  async updateOne(filter: FilterQuery<T>, data: UpdateQuery<T>): Promise<T | null> {
     const updatedItem = await this.model.findOneAndUpdate(filter, data);
     return updatedItem;
   }
@@ -55,11 +52,7 @@ abstract class BaseCrudModel<T> {
   }
   async upsert(filter: FilterQuery<T>, data: Partial<T>): Promise<T> {
     const options = { upsert: true, new: true, setDefaultsOnInsert: true };
-    const upsertedItem = await this.model.findOneAndUpdate(
-      filter,
-      data,
-      options
-    );
+    const upsertedItem = await this.model.findOneAndUpdate(filter, data, options);
     return upsertedItem;
   }
 }

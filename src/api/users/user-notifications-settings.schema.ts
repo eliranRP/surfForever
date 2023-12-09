@@ -1,8 +1,8 @@
-import { Schema, Document, model } from "mongoose";
-import { spotSchema } from "../location/location.schema";
-import { SpotLocation } from "../location/location.types";
-import { MORNING, Rating, WaveTypeId } from "./types";
-import { findWaveConfigurationTypeById, getRatingByValue } from "./utils";
+import { Schema, Document, model } from 'mongoose';
+import { spotSchema } from '../location/location.schema';
+import { SpotLocation } from '../location/location.types';
+import { MORNING, Rating, WaveTypeId } from './types';
+import { findWaveConfigurationTypeById, getRatingByValue } from './utils';
 
 export interface WaveHeightRange {
   min: number;
@@ -25,40 +25,38 @@ export interface IUserNotificationSettings {
   hasNotificationTurnedOn: boolean;
 }
 
-export type IUserNotificationSettingsSchema = IUserNotificationSettings &
-  Document;
+export type IUserNotificationSettingsSchema = IUserNotificationSettings & Document;
 
-const UserNotificationSettingsSchema =
-  new Schema<IUserNotificationSettingsSchema>(
-    {
-      waveHeightRange: {
-        min: {
-          type: Number,
-          default: findWaveConfigurationTypeById(WaveTypeId.FAIR).height.min,
-        },
-        max: {
-          type: Number,
-          default: findWaveConfigurationTypeById(WaveTypeId.FAIR).height.max,
-        },
+const UserNotificationSettingsSchema = new Schema<IUserNotificationSettingsSchema>(
+  {
+    waveHeightRange: {
+      min: {
+        type: Number,
+        default: findWaveConfigurationTypeById(WaveTypeId.FAIR).height.min,
       },
-      spot: {
-        type: spotSchema,
-      },
-      rating: {
-        key: { type: String, default: getRatingByValue(Rating.FAIR).key },
-        value: { type: Number, default: getRatingByValue(Rating.FAIR).value },
-        display: { type: String },
-      },
-      daysToForecast: { type: Number, default: 2 },
-      preferredReminderHours: { type: [Number], default: MORNING },
-      chatId: { type: Number },
-      hasNotificationTurnedOn: {
-        type: Boolean,
-        default: true,
+      max: {
+        type: Number,
+        default: findWaveConfigurationTypeById(WaveTypeId.FAIR).height.max,
       },
     },
-    { timestamps: true }
-  );
+    spot: {
+      type: spotSchema,
+    },
+    rating: {
+      key: { type: String, default: getRatingByValue(Rating.FAIR).key },
+      value: { type: Number, default: getRatingByValue(Rating.FAIR).value },
+      display: { type: String },
+    },
+    daysToForecast: { type: Number, default: 2 },
+    preferredReminderHours: { type: [Number], default: MORNING },
+    chatId: { type: Number },
+    hasNotificationTurnedOn: {
+      type: Boolean,
+      default: true,
+    },
+  },
+  { timestamps: true },
+);
 
 UserNotificationSettingsSchema.methods.toJSON = function () {
   const obj = this.toObject();
@@ -70,8 +68,8 @@ UserNotificationSettingsSchema.methods.toJSON = function () {
 };
 
 const UserNotificationSettings = model<IUserNotificationSettingsSchema>(
-  "UserNotificationSettings",
-  UserNotificationSettingsSchema
+  'UserNotificationSettings',
+  UserNotificationSettingsSchema,
 );
 
 export default UserNotificationSettings;

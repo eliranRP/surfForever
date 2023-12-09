@@ -1,8 +1,8 @@
-import { Factory } from "fishery";
-import { Forecast, WaveData } from "../../../surfline/types";
-import { faker } from "@faker-js/faker";
-import { Rating } from "../../users/types";
-import { ISeenForecast } from "../seen-forecast.schema";
+import { Factory } from 'fishery';
+import { Forecast, WaveData } from '../../../surfline/types';
+import { faker } from '@faker-js/faker';
+import { Rating } from '../../users/types';
+import { ISeenForecast } from '../seen-forecast.schema';
 
 export const ForecastFactory = Factory.define<Forecast>(() => ({
   timestamp: faker.date.future().getTime(),
@@ -11,7 +11,7 @@ export const ForecastFactory = Factory.define<Forecast>(() => ({
     max: faker.datatype.number({ min: 1.2, max: 1.8 }),
   },
   rating: {
-    key: "FAIR",
+    key: 'FAIR',
     value: Rating.FAIR,
   },
 }));
@@ -26,10 +26,10 @@ export const WaveFactory = Factory.define<WaveData>(() => ({
     optimalScore: faker.datatype.number({ min: 1, max: 5 }),
     plus: faker.datatype.boolean(),
     humanRelation: faker.helpers.arrayElement([
-      "Knee-high",
-      "Waist-high",
-      "Chest to overhead",
-      "Overhead",
+      'Knee-high',
+      'Waist-high',
+      'Chest to overhead',
+      'Overhead',
     ]),
     raw: {
       min: faker.datatype.float({ min: 1.0, max: 2.0, precision: 0.01 }),

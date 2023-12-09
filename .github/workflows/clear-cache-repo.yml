@@ -6,7 +6,6 @@ on:
         type: string
         description: Pull request number
 
-
 # job
 jobs:
   cleanup:

@@ -3,12 +3,12 @@ description: Reset environment head to trigger the aws CodePipeline
 inputs:
   environment-name:
     required: true
-    description: "The name of the environment"
+    description: 'The name of the environment'
   github-secret:
     required: true
-    description: "github token"
+    description: 'github token'
 runs:
-  using: "composite"
+  using: 'composite'
   steps:
     - uses: actions/checkout@v4
     - name: Push to selected branch

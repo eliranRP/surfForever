@@ -18,6 +18,6 @@ phases:
 
 artifacts:
   files:
-    - "Procfile"
-    - "dist/**/*"
-    - "node_modules/**/*"
+    - 'Procfile'
+    - 'dist/**/*'
+    - 'node_modules/**/*'

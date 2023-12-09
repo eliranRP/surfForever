@@ -1,8 +1,5 @@
-import { Rating } from "../api/users/types";
-import {
-  RatingSchema,
-  WaveHeightRange,
-} from "../api/users/user-notifications-settings.schema";
+import { Rating } from '../api/users/types';
+import { RatingSchema, WaveHeightRange } from '../api/users/user-notifications-settings.schema';
 
 export interface SearchResult {
   took: number;
@@ -23,7 +20,7 @@ export interface SearchResult {
       _source: {
         breadCrumbs: string[];
         name: string;
-        cams: any[]; // You might want to replace 'any' with a specific type
+        cams: unknown[]; // You might want to replace 'any' with a specific type
         location: {
           lon: number;
           lat: number;
@@ -33,7 +30,7 @@ export interface SearchResult {
     }>;
   };
   suggest: {
-    "spot-suggest": Array<{
+    'spot-suggest': Array<{
       text: string;
       offset: number;
       length: number;
@@ -46,7 +43,7 @@ export interface SearchResult {
         _source: {
           breadCrumbs: string[];
           name: string;
-          cams: any[]; // You might want to replace 'any' with a specific type
+          cams: unknown[]; // You might want to replace 'any' with a specific type
           location: {
             lon: number;
             lat: number;
@@ -64,7 +61,7 @@ export interface SearchResult {
 }
 
 export interface WaveHeightResponse {
-   wave: WaveData[] ;
+  wave: WaveData[];
 }
 
 export interface SpotDetail {
@@ -90,15 +87,6 @@ interface RatingData {
   rating: RatingSchema;
 }
 
-interface Swell {
-  height: number;
-  period: number;
-  impact: number;
-  power: number;
-  direction: number;
-  directionMin: number;
-  optimalScore: number;
-}
 interface Surf {
   min: number;
   max: number;

@@ -1,4 +1,4 @@
-import * as mongoose from "mongoose";
+import * as mongoose from 'mongoose';
 
 beforeEach(async () => {
   /*
@@ -9,12 +9,9 @@ beforeEach(async () => {
   if (mongoose.connections[0].readyState !== 1) {
     try {
       const dbUniqueName = new mongoose.Types.ObjectId().toString();
-      await mongoose.connect(
-        process.env.MONGO_URL || "mongodb://127.0.0.1:27017",
-        {
-          dbName: dbUniqueName,
-        }
-      );
+      await mongoose.connect(process.env.MONGO_URL || 'mongodb://127.0.0.1:27017', {
+        dbName: dbUniqueName,
+      });
     } finally {
       await mongoose.connections[0].db.dropDatabase();
     }

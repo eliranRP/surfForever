@@ -1,4 +1,4 @@
-import dayjs from "dayjs";
+import dayjs from 'dayjs';
 
 export const normalizeTimestamp = (timestamp: number) => {
   // Convert UNIX timestamp to dayjs object

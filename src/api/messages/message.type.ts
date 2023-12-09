@@ -1,11 +1,11 @@
-import { SpotLocation } from "../location/location.types";
-import { HourType } from "../users/types";
+import { SpotLocation } from '../location/location.types';
+import { HourType } from '../users/types';
 import {
   IUserNotificationSettings,
   RatingSchema,
   WaveHeightRange,
-} from "../users/user-notifications-settings.schema";
-import { getHourByKind } from "../users/utils";
+} from '../users/user-notifications-settings.schema';
+import { getHourByKind } from '../users/utils';
 
 const help = `
 For start you should use those command to set your preferences. You can set them all or set only the spot you preferred.
@@ -33,21 +33,18 @@ export const MESSAGES_TYPE = {
   MATCH: `⭐⭐⭐⭐⭐ Hooray! We found a match, so get ready to hit the waves! 🏄‍♀️🏄‍♀️🏄‍♀️ Follow the link to view the full forecast.`,
   NO_SETTINGS:
     "It appears that you haven't configured any settings yet. Utilize the command /help to explore the options available to you.",
-  NOTIFICATIONS_EMOJI:
-    "Great! Your preferences have been successfully updated!",
+  NOTIFICATIONS_EMOJI: 'Great! Your preferences have been successfully updated!',
 };
 
 export const getHourMessage = (option: HourType) => {
   return option
-    ? `${option.display} (${Math.min(...option.values)}:00 - ${Math.max(
-        ...option.values
-      )}:00)  ${option.emoji}`
-    : "No hours selected";
+    ? `${option.display} (${Math.min(...option.values)}:00 - ${Math.max(...option.values)}:00)  ${
+        option.emoji
+      }`
+    : 'No hours selected';
 };
 
-export const getPreferredSettingMessage = (
-  settings: IUserNotificationSettings
-) => {
+export const getPreferredSettingMessage = (settings: IUserNotificationSettings) => {
   if (!settings) return;
   const hours = getHourByKind(settings.preferredReminderHours);
 
@@ -76,11 +73,11 @@ export const getPreferredSettingMessage = (
 const waveMessage = (waveHeightRange: WaveHeightRange) => {
   return waveHeightRange
     ? `${waveHeightRange.min}m - ${waveHeightRange.max}m`
-    : "No wave height selected";
+    : 'No wave height selected';
 };
 
 const ratingMessage = (rating: RatingSchema) => {
-  return rating?.display ? rating?.display : "No rating selected";
+  return rating?.display ? rating?.display : 'No rating selected';
 };
 
 const spotMessage = (spot: SpotLocation) => {
@@ -88,5 +85,5 @@ const spotMessage = (spot: SpotLocation) => {
     ? `${spot.name} - ${spot.breadCrumbs.join()} 
     You can click on the link to see the spot forecast:
     <a> ${spot.href} </a>`
-    : "No spot selected";
+    : 'No spot selected';
 };
