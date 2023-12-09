@@ -1,4 +1,4 @@
-import { Document, Model, FilterQuery, UpdateQuery } from "mongoose";
+import { Document, Model, FilterQuery, UpdateQuery, ModifyResult } from "mongoose";
 
 abstract class BaseCrudModel<T> {
   protected model: Model<T>;
@@ -45,7 +45,7 @@ abstract class BaseCrudModel<T> {
     return updatedItem;
   }
 
-  async deleteById(id: string): Promise<T | null> {
+  async deleteById(id: string): Promise<ModifyResult<T> | null> {
     const deletedItem = await this.model.findByIdAndDelete(id);
     return deletedItem;
   }

@@ -29,6 +29,14 @@ import { checkMatchBetweenForecastAndUserSettings } from "../user-filters/user-f
 
 const instance = TelegramBotManager.getInstance();
 
+instance.onText(/\/total/, async (msg: Message) => {
+  const chatId = msg.chat.id;
+  if (chatId.toString() === process.env.ADMIN_CHAT_ID) {
+    const totalNumber = await UserNotificationSettingsModel.getTotalUsers();
+    return await instance.sendMessage(chatId, `Total users: ${totalNumber}`);
+  }
+});
+
 instance.onText(/\/test/, async (msg: Message) => {
   const chatId = msg.chat.id;
   const matches = await checkMatchBetweenForecastAndUserSettings(chatId);
