@@ -241,6 +241,11 @@ instance.onText(/\/favorite/, async (msg: Message) => {
   );
 });
 
+instance.onText(/\/chatid/, async (msg: Message) => {
+  const chatId = msg.chat.id;
+  await instance.sendMessage(chatId, "Your chat id is: " + chatId);
+});
+
 // Handle inline keyboard button callbacks
 instance.on("callback_query", async (query) => {
   const chatId = query.message.chat.id;
