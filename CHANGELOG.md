@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/eliranRP/surfForever/compare/v1.2.0...v1.3.0) (2023-12-09)
+
+
+### Features
+
+* get chat id ([82f4a72](https://github.com/eliranRP/surfForever/commit/82f4a7254ccfc2b339902683e86201d4c30ae8df))
+
 ## [1.2.0](https://github.com/eliranRP/surfForever/compare/v1.1.2...v1.2.0) (2023-12-09)
 
 
