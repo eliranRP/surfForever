@@ -1,5 +1,38 @@
 # Changelog
 
+## [1.2.0](https://github.com/eliranRP/surfForever/compare/v1.1.2...v1.2.0) (2023-12-09)
+
+
+### Features
+
+* Total users for admin chat ([fbbf6c4](https://github.com/eliranRP/surfForever/commit/fbbf6c4671cf458ab5eef0e2e1ce4084af24348d))
+
+
+### Bug Fixes
+
+* **deps:** update dependency axios to v1.6.2 ([fb01644](https://github.com/eliranRP/surfForever/commit/fb016448ecaa0e74192bb7bb1dec3484b0fd8f3e))
+* **deps:** update dependency mongoose to v8.0.1 ([547fb1f](https://github.com/eliranRP/surfForever/commit/547fb1f6d6b01b6029cfe5a246e6dd82533062d7))
+* **deps:** update dependency mongoose to v8.0.2 ([2a95b3e](https://github.com/eliranRP/surfForever/commit/2a95b3e1832a3711af00c61e26d85255def9fe5a))
+* **deps:** update dependency npm to v10.2.4 ([92c51b0](https://github.com/eliranRP/surfForever/commit/92c51b07f041e506d794441a2ec64f31807f9316))
+
+
+### Miscellaneous
+
+* **deps:** update dependency @shelf/jest-mongodb to v4.2.0 ([95f7619](https://github.com/eliranRP/surfForever/commit/95f76194936eb291fd0ce3ba76a5dd2fdb465c16))
+* **deps:** update dependency @types/jest to v29.5.10 ([1ac88aa](https://github.com/eliranRP/surfForever/commit/1ac88aafd8e3ded9950519338c30fb98fe40a6db))
+* **deps:** update dependency @types/jest to v29.5.8 ([18a5032](https://github.com/eliranRP/surfForever/commit/18a503220bb41111eaaca4128b071d9f7b02a603))
+* **deps:** update dependency @types/jest to v29.5.9 ([0cf7329](https://github.com/eliranRP/surfForever/commit/0cf7329472c493eef685264f285b8f857cd02aac))
+* **deps:** update dependency @types/lodash to v4.14.202 ([bb31cde](https://github.com/eliranRP/surfForever/commit/bb31cde8f36d3d33d128d92c7f235c51538cd49f))
+* **deps:** update dependency @types/node to v20.10.0 ([c4e721a](https://github.com/eliranRP/surfForever/commit/c4e721a7ff4863f1ba9497de3f7110edc7e5d992))
+* **deps:** update dependency @types/node to v20.9.1 ([e54e60b](https://github.com/eliranRP/surfForever/commit/e54e60b9c6d007eb1e7e2f9f7465ef8916c9d3ce))
+* **deps:** update dependency @types/node to v20.9.2 ([45d4684](https://github.com/eliranRP/surfForever/commit/45d4684c10063823f65d3f6ec7c7caf6b7eb0343))
+* **deps:** update dependency @types/node to v20.9.3 ([9d4700e](https://github.com/eliranRP/surfForever/commit/9d4700e65fb120fb8280779a82ffe2cc06cbdd3e))
+* **deps:** update dependency @types/node to v20.9.4 ([d02d48b](https://github.com/eliranRP/surfForever/commit/d02d48bbfa89ed33645d121f69f33d1c035a7683))
+* **deps:** update dependency @types/node to v20.9.5 ([f7e1764](https://github.com/eliranRP/surfForever/commit/f7e1764074b634b16079f2897e794d237ce7410d))
+* **deps:** update dependency @types/node-telegram-bot-api to v0.63.2 ([25d3c15](https://github.com/eliranRP/surfForever/commit/25d3c154d80abfe8ef498e488c8ce00c7d84e9c7))
+* **deps:** update dependency @types/node-telegram-bot-api to v0.63.3 ([ca80633](https://github.com/eliranRP/surfForever/commit/ca806334c4b3861cdccfa07acc1736254f3ea853))
+* **deps:** update dependency typescript to v5.3.2 ([9988cf1](https://github.com/eliranRP/surfForever/commit/9988cf16a1a57f722635b057d79332495be8f890))
+
 ## [1.1.2](https://github.com/eliranRP/surfForever/compare/v1.1.1...v1.1.2) (2023-11-17)
 
 
