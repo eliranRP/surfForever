@@ -23,6 +23,11 @@ class UserNotificationSettingsModel extends BaseCrudModel<IUserNotificationSetti
     super(UserNotificationSettings);
   }
 
+  async getTotalUsers(): Promise<number> {
+    const totalUsers = await this.model.countDocuments({});
+    return totalUsers;
+  }
+
   async setPreferredHours(chatId: number, hoursKey: HoursKind) {
     const selectedHours = Hours[hoursKey].values;
     if (!selectedHours) throw new Error('Invalid hours');
